@@ -110,6 +110,11 @@ module.exports = async function gwi(
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
+		from: /\n\[!\[G.*\n{2}/g,
+		to: '',
+	});
+	await replace({
+		files: Path.join(projectPath, 'README.md'),
 		from: /\[!\[n.*gwi\) /g,
 		to: '',
 	});
@@ -134,15 +139,16 @@ module.exports = async function gwi(
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
-		from: 'Interactive CLI for creating new JS repositories',
-		to: description,
+		from: ['Interactive CLI for creating new JS repositories', "![Usage](usage.gif)"],
+		to: [description, "``` bash\n$ gwi --help\n```"]
 	});
 	spinnerReadme.succeed();
 
 	const spinnerDelete = ora('Deleting unnecessary files').start();
-	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`]);
+	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`, `${Path.join(projectPath, 'usage.gif')}`]);
 	if (!travis) del([Path.join(projectPath, '.travis.yml')]);
 	if (!eslint) del([Path.join(projectPath, '.eslintrc.json')]);
+	fs.renameSync('index.js', `${projectName}.js`);
 	spinnerDelete.succeed();
 
 	if (install) {
