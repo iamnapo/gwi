@@ -10,7 +10,7 @@ const utils = require('./utils');
 	const userOptions = utils.hasCLIOptions(argInfo) ? argInfo : {
 		...argInfo,
 		...(await (async () => {
-			console.log(utils.getIntro());
+			console.log(utils.getIntro(process.stdout.columns));
 			return inquire();
 		})()),
 	};

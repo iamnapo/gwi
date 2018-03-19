@@ -100,7 +100,7 @@ const initialCommit = spawner => async (hash, projectDir) => {
 		[
 			'commit',
 			'-m',
-			`Initial commit\n\nCreated with iamnapo/gwi@${hash}`,
+			'Initial commit\n\nCreated with iamnapo/gwi',
 		],
 		opts,
 	);
@@ -110,11 +110,11 @@ const install = spawner => async (runner, projectDir) => {
 	const opts = {
 		cwd: projectDir,
 		encoding: 'utf8',
-		stdio: 'inherit',
+		stdio: 'pipe',
 	};
 	try {
 		// eslint-disable-next-line no-unused-expressions
-		runner === utils.RUNNER.NPM ? spawner('npm', ['install'], opts) : spawner('yarn', opts);
+		runner === utils.RUNNER.NPM ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
 	} catch (err) {
 		throw new Error('Installation failed. You\'ll need to install manually.');
 	}
