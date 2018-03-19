@@ -87,8 +87,8 @@ module.exports = async function gwi(
 	writePackageJson(pkgPath, newPkg);
 	await replace({
 		files: Path.join(projectPath, 'package.json'),
-		from: /gwi/g,
-		to: projectName,
+		from: [/\.\/bin\/gwi/g, /gwi/g, /iamnapo/g],
+		to: [projectName, projectName, githubUsername],
 	});
 	spinnerPackage.succeed();
 
@@ -103,20 +103,35 @@ module.exports = async function gwi(
 	spinnerLicense.succeed();
 
 	const spinnerReadme = ora('Updating README.md').start();
+	await replace({
+		files: Path.join(projectPath, 'README.md'),
+		from: /\n## A.*\n\n.*\n/g,
+		to: '',
+	});
+	await replace({
+		files: Path.join(projectPath, 'README.md'),
+		from: /\[!\[n.*gwi\) /g,
+		to: '',
+	});
 	if (!travis) {
 		await replace({
 			files: Path.join(projectPath, 'README.md'),
-			from: [/ \[!.*gwi\)/, /## A.*\n\n.*/],
-			to: ['', ''],
+			from: / \[!.*gwi\)/g,
+			to: '',
 		});
 	}
 	if (!masterIsHere) {
 		await replace({
 			files: Path.join(projectPath, 'README.md'),
-			from: /gwi/g,
-			to: projectName,
+			from: ['Napoleon-Christos Oikonomou', 'napoleonoikon@gmail.com', 'iamnapo.me'],
+			to: [fullName, email, `github.com/${githubUsername}`],
 		});
 	}
+	await replace({
+		files: Path.join(projectPath, 'README.md'),
+		from: [/gwi/g, /iamnapo/g],
+		to: [projectName, githubUsername],
+	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: 'Interactive CLI for creating new JS repositories',
@@ -125,7 +140,7 @@ module.exports = async function gwi(
 	spinnerReadme.succeed();
 
 	const spinnerDelete = ora('Deleting unnecessary files').start();
-	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`]);
+	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`]);
 	if (!travis) del([Path.join(projectPath, '.travis.yml')]);
 	if (!eslint) del([Path.join(projectPath, '.eslintrc.json')]);
 	spinnerDelete.succeed();
