@@ -4,6 +4,7 @@ const fs = require('fs');
 const ora = require('ora');
 const Path = require('path');
 const replace = require('replace-in-file');
+const execa = require('execa');
 const tasks = require('./tasks');
 const utils = require('./utils');
 
@@ -63,10 +64,6 @@ module.exports = async function gwi(
 		name: projectName,
 		version: '1.0.0',
 		description,
-		scripts: runner === utils.RUNNER.YARN ? {
-			...pkg.scripts,
-			preinstall: `node -e "if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('${projectName} must be installed with Yarn: https://yarnpkg.com/')"`,
-		} : { ...pkg.scripts },
 		repository: `github:${githubUsername}/${projectName}`,
 		author: {
 			...pkg.author,
@@ -110,7 +107,7 @@ module.exports = async function gwi(
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
-		from: /\n\[!\[G.*\n{2}/g,
+		from: / \[!\[G.*/g,
 		to: '',
 	});
 	await replace({
@@ -121,7 +118,7 @@ module.exports = async function gwi(
 	if (!travis) {
 		await replace({
 			files: Path.join(projectPath, 'README.md'),
-			from: / \[!.*gwi\)/g,
+			from: /\[!.*gwi\) /g,
 			to: '',
 		});
 	}
@@ -140,7 +137,7 @@ module.exports = async function gwi(
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: ['Interactive CLI for creating new JS repositories', "![Usage](usage.gif)"],
-		to: [description, "``` bash\n$ gwi --help\n```"]
+		to: [description, "``` bash\n$ " + projectName + "\n```"]
 	});
 	spinnerReadme.succeed();
 
@@ -148,7 +145,7 @@ module.exports = async function gwi(
 	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`, `${Path.join(projectPath, 'usage.gif')}`]);
 	if (!travis) del([Path.join(projectPath, '.travis.yml')]);
 	if (!eslint) del([Path.join(projectPath, '.eslintrc.json')]);
-	fs.renameSync('index.js', `${projectName}.js`);
+	fs.renameSync(Path.join(projectPath, 'index.js'), Path.join(projectPath, `${projectName}.js`));
 	spinnerDelete.succeed();
 
 	if (install) {
@@ -164,7 +161,11 @@ module.exports = async function gwi(
 		if (!masterIsHere) {
 			await taskss.initialCommit(commitHash, projectPath, fullName);
 		} else {
-			await taskss.initialCommit(commitHash, projectPath, 'Napoleon Oikonomou');
+			await execa('git', ['init'], {
+				cwd: projectPath,
+				encoding: 'utf8',
+				stdio: 'pipe',
+			});
 		}
 		spinnerGitInit.succeed();
 	}
