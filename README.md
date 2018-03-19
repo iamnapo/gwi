@@ -1,5 +1,7 @@
 # gwi [![Travis](https://img.shields.io/travis/iamnapo/gwi.svg?style=flat-square&label=Travis+CI)](https://travis-ci.org/iamnapo/gwi) [![npm](https://img.shields.io/npm/v/gwi.svg?style=flat-square)](https://www.npmjs.com/package/gwi) [![license](https://img.shields.io/github/license/iamnapo/gwi.svg?style=flat-square)](https://github.com/iamnapo/gwi/blob/master/LICENSE)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/iamnapo/gwi.svg)](https://greenkeeper.io/)
+
 > Interactive CLI for creating new JS repositories
 
 ## Install
