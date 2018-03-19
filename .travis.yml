@@ -1,0 +1,17 @@
+sudo: false
+os:
+  - linux
+  - osx
+language: node_js
+node_js:
+  - node
+cache:
+  directories:
+    - ~/.yarn-cache
+    - node_modules
+notifications:
+  email: false
+before_install:
+  - npm i -g npm
+after_success:
+  - node_modules/.bin/codecov

@@ -1,0 +1,152 @@
+const chalk = require('chalk');
+const del = require('del');
+const fs = require('fs');
+const ora = require('ora');
+const Path = require('path');
+const replace = require('replace-in-file');
+const tasks = require('./tasks');
+const utils = require('./utils');
+
+module.exports = async function gwi(
+	{
+		description,
+		email,
+		fullName,
+		githubUsername,
+		install,
+		projectName,
+		repoInfo,
+		runner,
+		travis,
+		workingDirectory,
+		eslint,
+	},
+	taskss,
+) {
+	let masterIsHere = false;
+	if (githubUsername === 'iamnapo') {
+		console.log(chalk.redBright.dim('  🔱  Welcome back, master.'));
+		masterIsHere = true;
+	}
+	const clonePackage = ora('Cloning default repository.').start();
+	const { commitHash, gitHistoryDir } = await taskss.cloneRepo(repoInfo, workingDirectory, projectName);
+	await del([gitHistoryDir]);
+	clonePackage.succeed(`Cloning default repository. ${chalk.dim(`Cloned at commit: ${commitHash}`)}`);
+
+	const spinnerPackage = ora('Updating package.json').start();
+	const projectPath = Path.join(workingDirectory, projectName);
+	const pkgPath = Path.join(projectPath, 'package.json');
+	const keptDevDeps = [
+		'codecov',
+		'jest',
+	];
+	if (eslint) {
+		keptDevDeps.push(
+			'eslint',
+			'eslint-config-airbnb',
+			'eslint-plugin-import',
+			'eslint-plugin-jest',
+			'eslint-plugin-jsx-a11y',
+			'eslint-plugin-react',
+		);
+	}
+	const keptDeps = [];
+	const filterAllBut = (keep, from) =>
+		keep.reduce(
+			(acc, moduleName) => ({ ...acc, [moduleName]: from[moduleName] }),
+			{},
+		);
+	const readPackageJson = path => JSON.parse(fs.readFileSync(path, 'utf8'));
+	const pkg = readPackageJson(pkgPath);
+	const newPkg = {
+		...pkg,
+		name: projectName,
+		version: '1.0.0',
+		description,
+		scripts: runner === utils.RUNNER.YARN ? {
+			...pkg.scripts,
+			preinstall: `node -e "if(process.env.npm_execpath.indexOf('yarn') === -1) throw new Error('${projectName} must be installed with Yarn: https://yarnpkg.com/')"`,
+		} : { ...pkg.scripts },
+		repository: `github:${githubUsername}/${projectName}`,
+		author: {
+			...pkg.author,
+			name: fullName,
+			email,
+			url: masterIsHere ? 'https://iamnapo.me' : `https://github.com/${githubUsername}`,
+		},
+		dependencies: filterAllBut(keptDeps, pkg.dependencies),
+		devDependencies: filterAllBut(keptDevDeps, pkg.devDependencies),
+		keywords: [],
+	};
+	delete newPkg.bin;
+
+	const writePackageJson = (path, pakg) => {
+		const stringified = `${JSON.stringify(pakg, null, 2)}\n`;
+		return fs.writeFileSync(path, stringified);
+	};
+	writePackageJson(pkgPath, newPkg);
+	await replace({
+		files: Path.join(projectPath, 'package.json'),
+		from: /gwi/g,
+		to: projectName,
+	});
+	spinnerPackage.succeed();
+
+	const spinnerLicense = ora('Updating LICENSE').start();
+	if (!masterIsHere) {
+		await replace({
+			files: Path.join(projectPath, 'LICENSE'),
+			from: ['Napoleon-Christos Oikonomou', 'napoleonoikon@gmail.com', 'iamnapo.me'],
+			to: [fullName, email, `github.com/${githubUsername}`],
+		});
+	}
+	spinnerLicense.succeed();
+
+	const spinnerReadme = ora('Updating README.md').start();
+	if (!travis) {
+		await replace({
+			files: Path.join(projectPath, 'README.md'),
+			from: [/ \[!.*gwi\)/, /## A.*\n\n.*/],
+			to: ['', ''],
+		});
+	}
+	if (!masterIsHere) {
+		await replace({
+			files: Path.join(projectPath, 'README.md'),
+			from: /gwi/g,
+			to: projectName,
+		});
+	}
+	await replace({
+		files: Path.join(projectPath, 'README.md'),
+		from: 'Interactive CLI for creating new JS repositories',
+		to: description,
+	});
+	spinnerReadme.succeed();
+
+	const spinnerDelete = ora('Deleting unnecessary files').start();
+	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`]);
+	if (!travis) del([Path.join(projectPath, '.travis.yml')]);
+	if (!eslint) del([Path.join(projectPath, '.eslintrc.json')]);
+	spinnerDelete.succeed();
+
+	if (install) {
+		const installDeps = ora('Installing dependencies').start();
+		await taskss.install(runner, projectPath);
+		installDeps.succeed();
+	}
+
+	const gitIsConfigured =
+		!!(fullName !== tasks.PLACEHOLDERS.NAME && email !== tasks.PLACEHOLDERS.EMAIL);
+	if (gitIsConfigured) {
+		const spinnerGitInit = ora('Initializing git').start();
+		if (!masterIsHere) {
+			await taskss.initialCommit(commitHash, projectPath, fullName);
+		} else {
+			await taskss.initialCommit(commitHash, projectPath, 'Napoleon Oikonomou');
+		}
+		spinnerGitInit.succeed();
+	}
+
+	console.log(`\n${chalk.blue.bold(`Created ${projectName}. 🎉`)}\n`);
+};
