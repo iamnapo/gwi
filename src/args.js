@@ -6,11 +6,11 @@ module.exports = async function checkArgs() {
 	const cli = meow(
 		`
 	Usage
-		$ npx gwi
+		$ gwi
 
 	Non-Interactive Usage
-		$ npx gwi <project-name> [options]
-	
+		$ gwi <project-name> [options]
+
 	Options
 		--description, -d   package.json description
 		--travis , -ci      include Travis CI configuration
@@ -20,7 +20,7 @@ module.exports = async function checkArgs() {
 		--no-eslint         don't include eslint
 
 		Non-Interactive Example
-		$ npx gwi my-library -d 'do something, better'
+		$ gwi my-library -d 'do something, better'
 		`,
 		{
 			flags: {

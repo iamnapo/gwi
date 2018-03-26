@@ -22,7 +22,7 @@ module.exports = async function inquire() {
 	const runnerQuestion = {
 		choices: [
 			{ name: 'npm', value: utils.RUNNER.NPM },
-			{ name: 'Yarn', value: utils.RUNNER.YARN },
+			{ name: 'yarn', value: utils.RUNNER.YARN },
 		],
 		message: chalk.green('⛵\u{200D}\u{200D} Will this project use npm or yarn?'),
 		name: 'runner',

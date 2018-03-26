@@ -6,7 +6,6 @@ const Path = require('path');
 const replace = require('replace-in-file');
 const execa = require('execa');
 const tasks = require('./tasks');
-const utils = require('./utils');
 
 module.exports = async function gwi(
 	{
@@ -136,8 +135,8 @@ module.exports = async function gwi(
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
-		from: ['Interactive CLI for creating new JS repositories', "![Usage](usage.gif)"],
-		to: [description, "``` bash\n$ " + projectName + "\n```"]
+		from: ['Interactive CLI for creating new JS repositories', '![Usage](usage.gif)'],
+		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``],
 	});
 	spinnerReadme.succeed();
 

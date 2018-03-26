@@ -1,6 +1,6 @@
 {
   "name": "gwi",
-  "version": "1.5.1",
+  "version": "1.5.2",
   "description": "Interactive CLI for creating new JS repositories",
   "main": "./bin/gwi.js",
   "bin": {
@@ -10,7 +10,7 @@
     "start": "node ./bin/gwi.js",
     "test": "jest"
   },
-  "repository": "iamnapo/gwi",
+  "repository": "github:iamnapo/gwi",
   "author": {
     "name": "Napoleon-Christos Oikonomou",
     "email": "napoleonoikon@gmail.com",
@@ -30,14 +30,14 @@
   },
   "devDependencies": {
     "codecov": "^3.0.0",
-    "eslint": "^4.19.0",
+    "eslint": "^4.19.1",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-plugin-import": "^2.9.0",
     "eslint-plugin-jest": "^21.15.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.7.0",
     "globby": "^8.0.1",
-    "jest": "^22.4.2",
+    "jest": "^22.4.3",
     "md5-file": "^3.2.3",
     "nock": "^9.2.3"
   },
@@ -47,11 +47,21 @@
     "execa": "^0.10.0",
     "github-username": "^4.1.0",
     "gradient-string": "^1.0.0",
-    "inquirer": "^5.1.0",
+    "inquirer": "^5.2.0",
     "meow": "^4.0.0",
     "ora": "^2.0.0",
-    "replace-in-file": "^3.2.0",
-    "update-notifier": "^2.3.0",
+    "replace-in-file": "^3.4.0",
+    "update-notifier": "^2.4.0",
     "validate-npm-package-name": "^3.0.0"
-  }
+  },
+  "keywords": [
+    "javascript",
+    "eslint",
+    "nodejs",
+    "starter",
+    "template",
+    "boilerplate",
+    "repository",
+    "git"
+  ]
 }
