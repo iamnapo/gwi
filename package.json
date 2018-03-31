@@ -1,6 +1,6 @@
 {
   "name": "gwi",
-  "version": "1.5.2",
+  "version": "1.5.3",
   "description": "Interactive CLI for creating new JS repositories",
   "main": "./bin/gwi.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node ./bin/gwi.js",
-    "test": "jest"
+    "test": "eslint . && jest"
   },
   "repository": "github:iamnapo/gwi",
   "author": {

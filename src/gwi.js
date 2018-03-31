@@ -63,6 +63,10 @@ module.exports = async function gwi(
 		name: projectName,
 		version: '1.0.0',
 		description,
+		scripts: {
+			...pkg.scripts,
+			test: eslint ? 'eslint . && jest' : 'jest',
+		},
 		repository: `github:${githubUsername}/${projectName}`,
 		author: {
 			...pkg.author,
