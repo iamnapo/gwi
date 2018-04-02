@@ -1,13 +1,13 @@
+const fs = require('fs');
+const Path = require('path');
 const chalk = require('chalk');
 const del = require('del');
-const fs = require('fs');
 const ora = require('ora');
-const Path = require('path');
 const replace = require('replace-in-file');
 const execa = require('execa');
 const tasks = require('./tasks');
 
-module.exports = async function gwi(
+module.exports = async (
 	{
 		description,
 		email,
@@ -19,17 +19,17 @@ module.exports = async function gwi(
 		runner,
 		travis,
 		workingDirectory,
-		eslint,
+		xo
 	},
 	taskss,
-) {
+) => {
 	let masterIsHere = false;
 	if (githubUsername === 'iamnapo') {
 		console.log(chalk.redBright.dim('  🔱  Welcome back, master.'));
 		masterIsHere = true;
 	}
 	const clonePackage = ora('Cloning default repository.').start();
-	const { commitHash, gitHistoryDir } = await taskss.cloneRepo(repoInfo, workingDirectory, projectName);
+	const {commitHash, gitHistoryDir} = await taskss.cloneRepo(repoInfo, workingDirectory, projectName);
 	await del([gitHistoryDir]);
 	clonePackage.succeed(`Cloning default repository. ${chalk.dim(`Cloned at commit: ${commitHash}`)}`);
 
@@ -38,22 +38,16 @@ module.exports = async function gwi(
 	const pkgPath = Path.join(projectPath, 'package.json');
 	const keptDevDeps = [
 		'codecov',
-		'jest',
+		'ava',
+		'nyc'
 	];
-	if (eslint) {
-		keptDevDeps.push(
-			'eslint',
-			'eslint-config-airbnb',
-			'eslint-plugin-import',
-			'eslint-plugin-jest',
-			'eslint-plugin-jsx-a11y',
-			'eslint-plugin-react',
-		);
+	if (xo) {
+		keptDevDeps.push('xo');
 	}
 	const keptDeps = [];
 	const filterAllBut = (keep, from) =>
 		keep.reduce(
-			(acc, moduleName) => ({ ...acc, [moduleName]: from[moduleName] }),
+			(acc, moduleName) => ({...acc, [moduleName]: from[moduleName]}),
 			{},
 		);
 	const readPackageJson = path => JSON.parse(fs.readFileSync(path, 'utf8'));
@@ -65,18 +59,18 @@ module.exports = async function gwi(
 		description,
 		scripts: {
 			...pkg.scripts,
-			test: eslint ? 'eslint . && jest' : 'jest',
+			test: xo ? 'xo && nyc ava' : 'nyc ava'
 		},
 		repository: `github:${githubUsername}/${projectName}`,
 		author: {
 			...pkg.author,
 			name: fullName,
 			email,
-			url: masterIsHere ? 'https://iamnapo.me' : `https://github.com/${githubUsername}`,
+			url: masterIsHere ? 'https://iamnapo.me' : `https://github.com/${githubUsername}`
 		},
 		dependencies: filterAllBut(keptDeps, pkg.dependencies),
 		devDependencies: filterAllBut(keptDevDeps, pkg.devDependencies),
-		keywords: [],
+		keywords: []
 	};
 	delete newPkg.bin;
 
@@ -88,7 +82,7 @@ module.exports = async function gwi(
 	await replace({
 		files: Path.join(projectPath, 'package.json'),
 		from: [/\.\/bin\/gwi/g, /gwi/g, /iamnapo/g],
-		to: [projectName, projectName, githubUsername],
+		to: [projectName, projectName, githubUsername]
 	});
 	spinnerPackage.succeed();
 
@@ -97,7 +91,7 @@ module.exports = async function gwi(
 		await replace({
 			files: Path.join(projectPath, 'LICENSE'),
 			from: ['Napoleon-Christos Oikonomou', 'napoleonoikon@gmail.com', 'iamnapo.me'],
-			to: [fullName, email, `github.com/${githubUsername}`],
+			to: [fullName, email, `github.com/${githubUsername}`]
 		});
 	}
 	spinnerLicense.succeed();
@@ -106,48 +100,49 @@ module.exports = async function gwi(
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: /\n## A.*\n\n.*\n/g,
-		to: '',
+		to: ''
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: / \[!\[G.*/g,
-		to: '',
+		to: ''
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: /\[!\[n.*gwi\) /g,
-		to: '',
+		to: ''
 	});
 	if (!travis) {
 		await replace({
 			files: Path.join(projectPath, 'README.md'),
 			from: /\[!.*gwi\) /g,
-			to: '',
+			to: ''
 		});
 	}
 	if (!masterIsHere) {
 		await replace({
 			files: Path.join(projectPath, 'README.md'),
 			from: ['Napoleon-Christos Oikonomou', 'napoleonoikon@gmail.com', 'iamnapo.me'],
-			to: [fullName, email, `github.com/${githubUsername}`],
+			to: [fullName, email, `github.com/${githubUsername}`]
 		});
 	}
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: [/gwi/g, /iamnapo/g],
-		to: [projectName, githubUsername],
+		to: [projectName, githubUsername]
 	});
 	await replace({
 		files: Path.join(projectPath, 'README.md'),
 		from: ['Interactive CLI for creating new JS repositories', '![Usage](usage.gif)'],
-		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``],
+		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``]
 	});
 	spinnerReadme.succeed();
 
 	const spinnerDelete = ora('Deleting unnecessary files').start();
 	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`, `${Path.join(projectPath, 'usage.gif')}`]);
-	if (!travis) del([Path.join(projectPath, '.travis.yml')]);
-	if (!eslint) del([Path.join(projectPath, '.eslintrc.json')]);
+	if (!travis) {
+del([Path.join(projectPath, '.travis.yml')]);
+	}
 	fs.renameSync(Path.join(projectPath, 'index.js'), Path.join(projectPath, `${projectName}.js`));
 	spinnerDelete.succeed();
 
@@ -158,17 +153,17 @@ module.exports = async function gwi(
 	}
 
 	const gitIsConfigured =
-		!!(fullName !== tasks.PLACEHOLDERS.NAME && email !== tasks.PLACEHOLDERS.EMAIL);
+		Boolean(fullName !== tasks.PLACEHOLDERS.NAME && email !== tasks.PLACEHOLDERS.EMAIL);
 	if (gitIsConfigured) {
 		const spinnerGitInit = ora('Initializing git').start();
-		if (!masterIsHere) {
-			await taskss.initialCommit(commitHash, projectPath, fullName);
-		} else {
+		if (masterIsHere) {
 			await execa('git', ['init'], {
 				cwd: projectPath,
 				encoding: 'utf8',
-				stdio: 'pipe',
+				stdio: 'pipe'
 			});
+		} else {
+			await taskss.initialCommit(commitHash, projectPath, fullName);
 		}
 		spinnerGitInit.succeed();
 	}

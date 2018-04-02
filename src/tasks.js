@@ -1,6 +1,6 @@
+const path = require('path');
 const execa = require('execa');
 const githubUsername = require('github-username');
-const path = require('path');
 const utils = require('./utils');
 
 const inherit = 'inherit';
@@ -8,7 +8,7 @@ const inherit = 'inherit';
 const PLACEHOLDERS = {
 	EMAIL: 'YOUR_EMAIL',
 	NAME: 'YOUR_NAME',
-	USERNAME: 'YOUR_GITHUB_USER_NAME',
+	USERNAME: 'YOUR_GITHUB_USER_NAME'
 };
 
 // We implement these as function factories to make unit testing easier.
@@ -22,14 +22,14 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 			['clone', '--depth=1', `--branch=${repoInfo.branch}`, repoInfo.repo, dir],
 			{
 				cwd: workingDirectory,
-				stdio: suppressOutput ? 'pipe' : 'inherit',
+				stdio: suppressOutput ? 'pipe' : 'inherit'
 			},
 		);
 	} catch (err) {
 		if (err.code === 'ENOENT') {
 			throw new Error(`
 		Git is not installed on your PATH. Please install Git and try again.
-			
+
 		For more information, visit: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 `);
 		} else {
@@ -39,7 +39,7 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 					['clone', '--depth=1', '--branch=master', repoInfo.repo, dir],
 					{
 						cwd: workingDirectory,
-						stdio: suppressOutput ? 'pipe' : 'inherit',
+						stdio: suppressOutput ? 'pipe' : 'inherit'
 					},
 				);
 			} catch (e) {
@@ -51,16 +51,16 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 		const revParseResult = await spawner('git', ['rev-parse', 'HEAD'], {
 			cwd: projectDir,
 			encoding: 'utf8',
-			stdio: ['pipe', 'pipe', inherit],
+			stdio: ['pipe', 'pipe', inherit]
 		});
 		const commitHash = revParseResult.stdout;
-		return { commitHash, gitHistoryDir };
+		return {commitHash, gitHistoryDir};
 	} catch (err) {
 		throw new Error('Git rev-parse failed.');
 	}
 };
 
-const getGithubUsername = fetcher => async (email) => {
+const getGithubUsername = fetcher => async email => {
 	if (email === PLACEHOLDERS.EMAIL) {
 		return PLACEHOLDERS.USERNAME;
 	}
@@ -70,19 +70,19 @@ const getGithubUsername = fetcher => async (email) => {
 const getUserInfo = spawner => async () => {
 	const opts = {
 		encoding: 'utf8',
-		stdio: ['pipe', 'pipe', inherit],
+		stdio: ['pipe', 'pipe', inherit]
 	};
 	try {
 		const nameResult = await spawner('git', ['config', 'user.name'], opts);
 		const emailResult = await spawner('git', ['config', 'user.email'], opts);
 		return {
 			gitEmail: emailResult.stdout,
-			gitName: nameResult.stdout,
+			gitName: nameResult.stdout
 		};
 	} catch (err) {
 		return {
 			gitEmail: PLACEHOLDERS.EMAIL,
-			gitName: PLACEHOLDERS.NAME,
+			gitName: PLACEHOLDERS.NAME
 		};
 	}
 };
@@ -91,7 +91,7 @@ const initialCommit = spawner => async (hash, projectDir) => {
 	const opts = {
 		cwd: projectDir,
 		encoding: 'utf8',
-		stdio: 'pipe',
+		stdio: 'pipe'
 	};
 	await spawner('git', ['init'], opts);
 	await spawner('git', ['add', '-A'], opts);
@@ -100,7 +100,7 @@ const initialCommit = spawner => async (hash, projectDir) => {
 		[
 			'commit',
 			'-m',
-			'Initial commit\n\nCreated with iamnapo/gwi',
+			'Initial commit\n\nCreated with iamnapo/gwi'
 		],
 		opts,
 	);
@@ -110,11 +110,10 @@ const install = spawner => async (runner, projectDir) => {
 	const opts = {
 		cwd: projectDir,
 		encoding: 'utf8',
-		stdio: 'pipe',
+		stdio: 'pipe'
 	};
 	try {
-		// eslint-disable-next-line no-unused-expressions
-		runner === utils.RUNNER.NPM ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
+		return runner === utils.RUNNER.NPM ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
 	} catch (err) {
 		throw new Error('Installation failed. You\'ll need to install manually.');
 	}
@@ -127,33 +126,33 @@ const install = spawner => async (runner, projectDir) => {
  * not yet released, may cause unexpected results.)
  * @param starterVersion the current version of this CLI
  */
-const getRepoInfo = starterVersion => (process.env.GWI_REPO_URL
-	? {
-		branch: process.env.GWI_REPO_BRANCH
-			? process.env.GWI_REPO_BRANCH
-			: 'master',
-		repo: process.env.GWI_REPO_URL,
-	}
-	: {
+const getRepoInfo = starterVersion => (process.env.GWI_REPO_URL ?
+	{
+		branch: process.env.GWI_REPO_BRANCH ?
+			process.env.GWI_REPO_BRANCH :
+			'master',
+		repo: process.env.GWI_REPO_URL
+	} :
+	{
 		branch: `v${starterVersion}`,
-		repo: 'https://github.com/iamnapo/gwi.git',
+		repo: 'https://github.com/iamnapo/gwi.git'
 	});
 
 const LiveTasks = {
 	cloneRepo: cloneRepo(execa),
 	initialCommit: initialCommit(execa),
-	install: install(execa),
+	install: install(execa)
 };
 
-const addInferredOptions = async (userOptions) => {
-	const { gitName, gitEmail } = await getUserInfo(execa)();
+const addInferredOptions = async userOptions => {
+	const {gitName, gitEmail} = await getUserInfo(execa)();
 	const username = await getGithubUsername(githubUsername)(gitEmail);
 	const inferredOptions = {
 		email: gitEmail,
 		fullName: gitName,
 		githubUsername: username,
 		repoInfo: getRepoInfo(userOptions.starterVersion),
-		workingDirectory: process.cwd(),
+		workingDirectory: process.cwd()
 	};
 	return {
 		...inferredOptions,
@@ -161,8 +160,8 @@ const addInferredOptions = async (userOptions) => {
 		install: userOptions.install,
 		projectName: userOptions.projectName,
 		runner: userOptions.runner,
-		eslint: userOptions.eslint,
-		travis: userOptions.travis,
+		xo: userOptions.xo,
+		travis: userOptions.travis
 	};
 };
 
@@ -176,5 +175,5 @@ module.exports = {
 	install,
 	getRepoInfo,
 	LiveTasks,
-	addInferredOptions,
+	addInferredOptions
 };

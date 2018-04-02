@@ -14,4 +14,4 @@ notifications:
 before_install:
   - npm i -g npm
 after_success:
-  - codecov
+  - nyc report --reporter=text-lcov > coverage.lcov && codecov

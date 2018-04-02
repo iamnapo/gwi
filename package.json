@@ -1,6 +1,6 @@
 {
   "name": "gwi",
-  "version": "1.5.3",
+  "version": "1.6.0",
   "description": "Interactive CLI for creating new JS repositories",
   "main": "./bin/gwi.js",
   "bin": {
@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node ./bin/gwi.js",
-    "test": "eslint . && jest"
+    "test": "xo && nyc ava"
   },
   "repository": "github:iamnapo/gwi",
   "author": {
@@ -21,25 +21,17 @@
     "url": "https://github.com/iamnapo/gwi/issues"
   },
   "homepage": "https://github.com/iamnapo/gwi#readme",
-  "jest": {
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true
-  },
   "engines": {
     "node": ">=9"
   },
   "devDependencies": {
+    "ava": "^0.25.0",
     "codecov": "^3.0.0",
-    "eslint": "^4.19.1",
-    "eslint-config-airbnb": "^16.1.0",
-    "eslint-plugin-import": "^2.9.0",
-    "eslint-plugin-jest": "^21.15.0",
-    "eslint-plugin-jsx-a11y": "^6.0.3",
-    "eslint-plugin-react": "^7.7.0",
     "globby": "^8.0.1",
-    "jest": "^22.4.3",
     "md5-file": "^3.2.3",
-    "nock": "^9.2.3"
+    "nock": "^9.2.3",
+    "nyc": "^11.6.0",
+    "xo": "^0.20.3"
   },
   "dependencies": {
     "chalk": "^2.3.2",
@@ -56,7 +48,7 @@
   },
   "keywords": [
     "javascript",
-    "eslint",
+    "xo",
     "nodejs",
     "starter",
     "template",

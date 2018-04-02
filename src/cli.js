@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const chalk = require('chalk');
 const checkArgs = require('./args');
 const inquire = require('./inquire');
@@ -12,11 +14,11 @@ const utils = require('./utils');
 		...(await (async () => {
 			console.log(utils.getIntro(process.stdout.columns));
 			return inquire();
-		})()),
+		})())
 	};
 	const options = await tasks.addInferredOptions(userOptions);
 	return gwi(options, tasks.LiveTasks);
-})().catch((err) => {
+})().catch(err => {
 	console.error(`${chalk.red(err.message)}`);
 	process.exit(1);
 });
