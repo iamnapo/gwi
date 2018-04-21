@@ -17,7 +17,3 @@ npm i -g gwi
 ## License
 
 MIT © [Napoleon-Christos Oikonomou](https://iamnapo.me)
-
-## Acknowledgements
-
-Based on [bitjson/typescript-starter](https://github.com/bitjson/typescript-starter).

@@ -6,8 +6,8 @@ language: node_js
 node_js:
   - node
 cache:
+  yarn: true
   directories:
-    - ~/.yarn-cache
     - node_modules
 notifications:
   email: false

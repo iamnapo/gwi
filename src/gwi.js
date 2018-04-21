@@ -139,7 +139,7 @@ module.exports = async (
 	spinnerReadme.succeed();
 
 	const spinnerDelete = ora('Deleting unnecessary files').start();
-	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`, `${Path.join(projectPath, 'usage.gif')}`]);
+	await del([`${Path.join(projectPath, 'src')}/*`, `${Path.join(projectPath, 'tests')}/*`, `${Path.join(projectPath, 'bin')}`, `${Path.join(projectPath, '.npmignore')}`, `${Path.join(projectPath, 'usage.gif')}`, `${Path.join(projectPath, 'yarn.lock')}`]);
 	if (!travis) {
 del([Path.join(projectPath, '.travis.yml')]);
 	}
