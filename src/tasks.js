@@ -124,7 +124,8 @@ const install = spawner => async (runner, projectDir) => {
  * release rather than `master`. This ensures we get the exact files expected by
  * this version of the CLI. (If we cloned master, changes merged to master, but
  * not yet released, may cause unexpected results.)
- * @param starterVersion the current version of this CLI
+ * @param {string} starterVersion the current version of this CLI
+ * @return {object} the URL and branch to clone
  */
 const getRepoInfo = starterVersion => (process.env.GWI_REPO_URL ?
 	{
