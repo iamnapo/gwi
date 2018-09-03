@@ -11,14 +11,14 @@ const utils = require('./utils');
 	const argInfo = await checkArgs();
 	const userOptions = utils.hasCLIOptions(argInfo) ? argInfo : {
 		...argInfo,
-		...(await (async () => {
+		...(await (() => {
 			console.log(utils.getIntro(process.stdout.columns));
 			return inquire();
 		})())
 	};
 	const options = await tasks.addInferredOptions(userOptions);
 	return gwi(options, tasks.LiveTasks);
-})().catch(err => {
-	console.error(`${chalk.red(err.message)}`);
+})().catch(error => {
+	console.error(`${chalk.red(error.message)}`);
 	process.exit(1);
 });
