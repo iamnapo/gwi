@@ -5,7 +5,7 @@ const utils = require('./utils');
 module.exports = async () => {
 	const packageNameQuestion = {
 		filter: answer => answer.trim(),
-		message: chalk.green('📦\u{200D}\u{200D} Enter the new package name:'),
+		message: chalk.green('📦\u{200D} Enter the new package name:'),
 		name: 'projectName',
 		type: 'input',
 		validate: utils.validateName
@@ -13,7 +13,7 @@ module.exports = async () => {
 
 	const packageDescriptionQuestion = {
 		filter: answer => answer.trim(),
-		message: chalk.green('💭\u{200D}\u{200D} Enter the package description:'),
+		message: chalk.green('💭\u{200D} Enter the package description:'),
 		name: 'description',
 		type: 'input',
 		validate: answer => answer.length > 0
@@ -24,7 +24,7 @@ module.exports = async () => {
 			{name: 'yarn', value: utils.RUNNER.YARN},
 			{name: 'npm', value: utils.RUNNER.NPM}
 		],
-		message: chalk.green('⛵\u{200D}\u{200D} Will this project use yarn or npm?'),
+		message: chalk.green('⛵\u{200D} Will this project use yarn or npm?'),
 		name: 'runner',
 		type: 'list'
 	};

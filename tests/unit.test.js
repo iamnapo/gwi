@@ -103,7 +103,7 @@ test('tasks.cloneRepo: throws when clone fails', async t => {
 
 test('tasks.cloneRepo: throws when rev-parse fails', async t => {
 	let calls = 0;
-	const mock = async () => {
+	const mock = async () => { // eslint-disable-line require-await
 		calls += 1;
 		return calls === 1 ? {} : mockErr(128)();
 	};
@@ -113,7 +113,7 @@ test('tasks.cloneRepo: throws when rev-parse fails', async t => {
 });
 
 test('tasks.getGithubUsername: returns found users', async t => {
-	const mockFetcher = async email => email.split('@')[0];
+	const mockFetcher = async email => email.split('@')[0]; // eslint-disable-line require-await
 	const username = await tasks.getGithubUsername(mockFetcher)('iamnapo@github.com');
 	t.is(username, 'iamnapo');
 });
@@ -125,7 +125,7 @@ test('tasks.getGithubUsername: returns placeholder if user doesn\'t have Git use
 });
 
 test('tasks.getGithubUsername: returns placeholder if not found', async t => {
-	const mockFetcher = async () => {
+	const mockFetcher = async () => { // eslint-disable-line require-await
 		throw new Error('An error');
 	};
 	const username = await tasks.getGithubUsername(mockFetcher)('iamnapo@github.com');
@@ -141,7 +141,7 @@ test('tasks.getUserInfo: suppresses errors and returns empty strings', async t =
 });
 
 test('tasks.getUserInfo: returns results properly', async t => {
-	const mock = async () => ({
+	const mock = async () => ({ // eslint-disable-line require-await
 		stdout: 'result'
 	});
 	const result = await tasks.getUserInfo(mock)();
@@ -161,14 +161,14 @@ test('tasks.initialCommit: spawns 3 times', async t => {
 	t.plan(6);
 	const error = await t.throws(tasks.initialCommit(mockErr(1))('deadbeef', 'fail'));
 	t.is(error.code, 1);
-	const mock = async () => {
+	const mock = async () => { // eslint-disable-line require-await
 		t.pass();
 	};
 	await t.notThrows(tasks.initialCommit(mock)('commit', 'dir'));
 });
 
 test('tasks.install: uses the correct runner', async t => {
-	const mock = async runner => t.is(runner, utils.RUNNER.YARN);
+	const mock = async runner => t.is(runner, utils.RUNNER.YARN); // eslint-disable-line require-await
 	await tasks.install(mock)(utils.RUNNER.YARN, 'pass');
 });
 

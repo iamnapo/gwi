@@ -55,12 +55,12 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 		});
 		const commitHash = revParseResult.stdout;
 		return {commitHash, gitHistoryDir};
-	} catch (err) {
+	} catch (error) {
 		throw new Error('Git rev-parse failed.');
 	}
 };
 
-const getGithubUsername = fetcher => async email => {
+const getGithubUsername = fetcher => async email => { // eslint-disable-line require-await
 	if (email === PLACEHOLDERS.EMAIL) {
 		return PLACEHOLDERS.USERNAME;
 	}
@@ -79,7 +79,7 @@ const getUserInfo = spawner => async () => {
 			gitEmail: emailResult.stdout,
 			gitName: nameResult.stdout
 		};
-	} catch (err) {
+	} catch (error) {
 		return {
 			gitEmail: PLACEHOLDERS.EMAIL,
 			gitName: PLACEHOLDERS.NAME
@@ -114,7 +114,7 @@ const install = spawner => async (runner, projectDir) => {
 	};
 	try {
 		return runner === utils.RUNNER.NPM ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
-	} catch (err) {
+	} catch (error) {
 		throw new Error('Installation failed. You\'ll need to install manually.');
 	}
 };
