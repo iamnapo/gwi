@@ -26,8 +26,8 @@
   },
   "devDependencies": {
     "ava": "^0.25.0",
-    "codecov": "^3.0.4",
-    "nock": "^10.0.1",
+    "codecov": "^3.1.0",
+    "nock": "^10.0.2",
     "nyc": "^13.1.0",
     "xo": "^0.23.0"
   },
@@ -36,7 +36,7 @@
     "del": "^3.0.0",
     "execa": "^1.0.0",
     "github-username": "^4.1.0",
-    "gradient-string": "^1.1.0",
+    "gradient-string": "^1.2.0",
     "inquirer": "^6.2.0",
     "meow": "^5.0.0",
     "ora": "^3.0.0",

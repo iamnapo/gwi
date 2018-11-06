@@ -14,10 +14,10 @@ module.exports = async () => {
 	Options
 		--description, -d   package.json description
 		--travis , -ci      include Travis CI configuration
-		--npm              use npm (default: yarn)
+		--npm               use npm (default: yarn)
 
 		--no-install        skip yarn/npm install
-		--no-xo         don't include xo
+		--no-xo             don't include xo
 
 		Non-Interactive Example
 		$ gwi my-library -d 'do something, better'
