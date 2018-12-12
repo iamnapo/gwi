@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "node ./bin/gwi.js",
-    "test": "xo && nyc ava"
+    "test": "eslint . && nyc ava"
   },
   "repository": "github:iamnapo/gwi",
   "author": {
@@ -22,14 +22,20 @@
   },
   "homepage": "https://github.com/iamnapo/gwi#readme",
   "engines": {
-    "node": ">=9"
+    "node": ">=10"
   },
   "devDependencies": {
     "ava": "^0.25.0",
+    "babel-eslint": "^10.0.1",
     "codecov": "^3.1.0",
-    "nock": "^10.0.2",
-    "nyc": "^13.1.0",
-    "xo": "^0.23.0"
+    "eslint": "^5.10.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-iamnapo": "^1.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "eslint-plugin-react": "^7.11.1",
+    "nock": "^10.0.4",
+    "nyc": "^13.1.0"
   },
   "dependencies": {
     "chalk": "^2.4.1",
@@ -37,7 +43,7 @@
     "execa": "^1.0.0",
     "github-username": "^4.1.0",
     "gradient-string": "^1.2.0",
-    "inquirer": "^6.2.0",
+    "inquirer": "^6.2.1",
     "meow": "^5.0.0",
     "ora": "^3.0.0",
     "replace-in-file": "^3.4.2",
@@ -46,7 +52,7 @@
   },
   "keywords": [
     "javascript",
-    "xo",
+    "eslint",
     "nodejs",
     "starter",
     "template",
