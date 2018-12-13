@@ -19,7 +19,7 @@ module.exports = async (
     runner,
     travis,
     workingDirectory,
-    xo,
+    eslint,
   },
   taskss,
 ) => {
@@ -41,8 +41,9 @@ module.exports = async (
     'ava',
     'nyc',
   ];
-  if (xo) {
-    keptDevDeps.push('xo');
+  if (eslint) {
+    keptDevDeps.push('babel-eslint', 'eslint', 'eslint-config-airbnb', 'eslint-config-iamnapo', 'eslint-plugin-import',
+      'eslint-plugin-jsx-a11y', 'eslint-plugin-react');
   }
   const keptDeps = [];
   const filterAllBut = (keep, from) => keep.reduce(
@@ -58,7 +59,7 @@ module.exports = async (
     description,
     scripts: {
       ...pkg.scripts,
-      test: xo ? 'xo && nyc ava' : 'nyc ava',
+      test: eslint ? 'eslint . && nyc ava' : 'nyc ava',
     },
     repository: `github:${githubUsername}/${projectName}`,
     author: {

@@ -161,7 +161,7 @@ const addInferredOptions = async (userOptions) => {
     install: userOptions.install,
     projectName: userOptions.projectName,
     runner: userOptions.runner,
-    xo: userOptions.xo,
+    eslint: userOptions.eslint,
     travis: userOptions.travis,
   };
 };

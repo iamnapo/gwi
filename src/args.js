@@ -14,10 +14,10 @@ module.exports = async () => {
   Options
     --description, -d   package.json description
     --travis , -ci      include Travis CI configuration
-    --npm               use npm (default: yarn)
+    --yarn               use yarn (default: npm)
 
     --no-install        skip yarn/npm install
-    --no-xo             don't include xo
+    --no-eslint             don't include eslint
 
     Non-Interactive Example
     $ gwi my-library -d 'do something, better'
@@ -35,14 +35,14 @@ module.exports = async () => {
           type: 'boolean',
         },
         yarn: {
-          default: true,
+          default: false,
           type: 'boolean',
         },
         install: {
           default: true,
           type: 'boolean',
         },
-        xo: {
+        eslint: {
           default: true,
           type: 'boolean',
         },
@@ -61,12 +61,12 @@ module.exports = async () => {
   const [input] = cli.input;
   if (!input) {
     // No project-name provided, return to collect options in interactive mode
-    // note: we always return `install` and `xo`, so --no-install and --no-xo always work
+    // note: we always return `install` and `eslint`, so --no-install and --no-eslint always work
     // (important for test performance)
     return {
       travis: cli.flags.travis,
       install: cli.flags.install,
-      xo: cli.flags.xo,
+      eslint: cli.flags.eslint,
       starterVersion: cli.pkg.version,
     };
   }
@@ -78,7 +78,7 @@ module.exports = async () => {
   return {
     description: cli.flags.description,
     install: cli.flags.install,
-    xo: cli.flags.xo,
+    eslint: cli.flags.eslint,
     projectName: input,
     runner: cli.flags.npm ? utils.RUNNER.NPM : utils.RUNNER.YARN,
     starterVersion: cli.pkg.version,

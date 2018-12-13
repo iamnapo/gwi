@@ -66,3 +66,4 @@ typings/
 .gitattributes
 .travis.yml
 index.js
+usage.gif

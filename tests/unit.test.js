@@ -48,7 +48,7 @@ test('checkArgs returns the right options', async (t) => {
     '-description "example description"',
     '--travis',
     '--yarn',
-    '--no-xo',
+    '--no-eslint',
     '--no-install',
   ];
   const opts = await checkArgs();
@@ -60,7 +60,7 @@ test('checkArgs returns the right options', async (t) => {
     runner: utils.RUNNER.YARN,
     starterVersion: currentVersion,
     travis: true,
-    xo: false,
+    eslint: false,
   });
 });
 

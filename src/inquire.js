@@ -31,7 +31,7 @@ module.exports = async () => {
 
   const Extras = {
     travis: 'travis',
-    xo: 'xo',
+    eslint: 'eslint',
     install: 'install',
   };
   const extrasQuestion = {
@@ -43,8 +43,8 @@ module.exports = async () => {
       },
       {
         checked: true,
-        name: 'Include xo support',
-        value: Extras.xo,
+        name: 'Include eslint',
+        value: Extras.eslint,
       },
       {
         checked: true,
@@ -72,7 +72,7 @@ module.exports = async () => {
   return {
     description,
     install: extras.includes(Extras.install),
-    xo: extras.includes(Extras.xo),
+    eslint: extras.includes(Extras.eslint),
     projectName,
     runner,
     travis: extras.includes(Extras.travis),
