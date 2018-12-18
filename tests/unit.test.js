@@ -24,7 +24,7 @@ test('doesn\'t error if not outdated', async (t) => {
     'path/to/gwi',
     'example-project',
   ];
-  await t.notThrows(checkArgs());
+  await t.notThrows(checkArgs);
 });
 
 test('doesn\'t error if update-notifier fails', async (t) => {
@@ -36,7 +36,7 @@ test('doesn\'t error if update-notifier fails', async (t) => {
     'path/to/gwi',
     'example-project',
   ];
-  await t.notThrows(checkArgs());
+  await t.notThrows(checkArgs);
 });
 
 test('checkArgs returns the right options', async (t) => {
@@ -86,13 +86,13 @@ const mockErr = code => () => {
 
 test('tasks.cloneRepo: errors when Git is not installed on PATH', async (t) => {
   t.plan(2);
-  const error = await t.throws(tasks.cloneRepo(mockErr('ENOENT'))({ repo: 'r', branch: 'b' }, 'd', 'p'));
+  const error = await t.throwsAsync(tasks.cloneRepo(mockErr('ENOENT'))({ repo: 'r', branch: 'b' }, 'd', 'p'));
   t.regex(error.message, /Git is not installed on your PATH/);
 });
 
 test('tasks.cloneRepo: throws when clone fails', async (t) => {
   t.plan(2);
-  const error = await t.throws(tasks.cloneRepo(mockErr(128))({ repo: 'r', branch: 'b' }, 'd', 'p'));
+  const error = await t.throwsAsync(tasks.cloneRepo(mockErr(128))({ repo: 'r', branch: 'b' }, 'd', 'p'));
   t.regex(error.message, /Git clone failed\./);
 });
 
@@ -103,7 +103,7 @@ test('tasks.cloneRepo: throws when rev-parse fails', async (t) => {
     return calls === 1 ? {} : mockErr(128)();
   };
   t.plan(2);
-  const error = await t.throws(tasks.cloneRepo(mock)({ repo: 'r', branch: 'b' }, 'd', 'p'));
+  const error = await t.throwsAsync(tasks.cloneRepo(mock)({ repo: 'r', branch: 'b' }, 'd', 'p'));
   t.regex(error.message, /Git rev-parse failed\./);
 });
 
@@ -146,18 +146,18 @@ test('tasks.getUserInfo: returns results properly', async (t) => {
 
 test('tasks.initialCommit: throws generated errors', async (t) => {
   t.plan(2);
-  const error = await t.throws(tasks.initialCommit(mockErr(1))('deadbeef', 'fail'));
+  const error = await t.throwsAsync(tasks.initialCommit(mockErr(1))('deadbeef', 'fail'));
   t.is(error.code, 1);
 });
 
 test('tasks.initialCommit: spawns 3 times', async (t) => {
   t.plan(6);
-  const error = await t.throws(tasks.initialCommit(mockErr(1))('deadbeef', 'fail'));
+  const error = await t.throwsAsync(tasks.initialCommit(mockErr(1))('deadbeef', 'fail'));
   t.is(error.code, 1);
   const mock = async () => {
     t.pass();
   };
-  await t.notThrows(tasks.initialCommit(mock)('commit', 'dir'));
+  await t.notThrowsAsync(tasks.initialCommit(mock)('commit', 'dir'));
 });
 
 test('tasks.install: uses the correct runner', async (t) => {
@@ -167,7 +167,7 @@ test('tasks.install: uses the correct runner', async (t) => {
 
 test('tasks.install: throws pretty error on failure', async (t) => {
   t.plan(2);
-  const error = await t.throws(tasks.install(mockErr())(utils.RUNNER.NPM, 'fail'));
+  const error = await t.throwsAsync(tasks.install(mockErr())(utils.RUNNER.NPM, 'fail'));
   t.regex(error.message, /Installation failed\. You'll need to install manually\./);
 });
 
