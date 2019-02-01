@@ -61,6 +61,7 @@ module.exports = async (
       ...pkg.scripts,
       test: eslint ? 'eslint . && nyc ava' : 'nyc ava',
     },
+    husky: { hooks: { 'pre-commit': `${runner} test` } },
     repository: `github:${githubUsername}/${projectName}`,
     author: {
       ...pkg.author,
