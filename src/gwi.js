@@ -40,6 +40,7 @@ module.exports = async (
     'codecov',
     'ava',
     'nyc',
+    'husky',
   ];
   if (eslint) {
     keptDevDeps.push('babel-eslint', 'eslint', 'eslint-config-airbnb', 'eslint-config-iamnapo', 'eslint-plugin-import',
