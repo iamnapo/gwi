@@ -56,7 +56,7 @@ module.exports = async (
   const newPkg = {
     ...pkg,
     name: projectName,
-    version: '1.0.0',
+    version: '0.1.0',
     description,
     scripts: {
       ...pkg.scripts,
@@ -66,7 +66,7 @@ module.exports = async (
     repository: `github:${githubUsername}/${projectName}`,
     author: {
       ...pkg.author,
-      name: fullName,
+      name: masterIsHere ? 'Napoleon-Christos Oikonomou' : fullName,
       email,
       url: masterIsHere ? 'https://iamnapo.me' : `https://github.com/${githubUsername}`,
     },
