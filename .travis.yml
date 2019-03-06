@@ -5,12 +5,8 @@ os:
 language: node_js
 node_js:
   - node
-cache:
-  directories:
-    - node_modules
+cache: npm
 notifications:
   email: false
-before_install:
-  - npm i -g npm
 after_success:
   - nyc report --reporter=text-lcov > coverage.lcov && codecov

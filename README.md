@@ -2,11 +2,11 @@
 
 > Interactive CLI for creating new JS repositories
 
-[![Travis](https://img.shields.io/travis/iamnapo/gwi.svg?style=flat-square&label=Travis+CI&logo=travis)](https://travis-ci.org/iamnapo/gwi) [![npm](https://img.shields.io/npm/v/gwi.svg?style=flat-square)](https://www.npmjs.com/package/gwi) [![license](https://img.shields.io/github/license/iamnapo/gwi.svg?style=flat-square)](https://github.com/iamnapo/gwi/blob/master/LICENSE)
+[![Travis](https://img.shields.io/travis/iamnapo/gwi.svg?style=flat-square&logo=travis&label=)](https://travis-ci.org/iamnapo/gwi) [![npm](https://img.shields.io/npm/v/gwi.svg?style=flat-square)](https://www.npmjs.com/package/gwi) [![license](https://img.shields.io/github/license/iamnapo/gwi.svg?style=flat-square)](./LICENSE)
 
 ## Install
 
-``` javascript
+```bash
 npm i -g gwi
 ```
 

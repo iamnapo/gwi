@@ -37,7 +37,6 @@ module.exports = async (
   const projectPath = Path.join(workingDirectory, projectName);
   const pkgPath = Path.join(projectPath, 'package.json');
   const keptDevDeps = [
-    'codecov',
     'ava',
     'nyc',
     'husky',
@@ -139,6 +138,16 @@ module.exports = async (
     to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``],
   });
   spinnerReadme.succeed();
+
+  if (travis) {
+    const spinnerTravis = ora('Updating .travis.yml').start();
+    await replace({
+      files: Path.join(projectPath, '.travis.yml'),
+      from: [/npm/g, /^after.*\n.*codecov/g],
+      to: [runner, ''],
+    });
+    spinnerTravis.succeed();
+  }
 
   const spinnerDelete = ora('Deleting unnecessary files').start();
   await del([
