@@ -30,12 +30,12 @@
     "node": ">=10"
   },
   "devDependencies": {
-    "ava": "^1.3.1",
+    "ava": "^1.4.1",
     "babel-eslint": "^10.0.1",
     "codecov": "^3.2.0",
-    "eslint": "^5.15.1",
+    "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-iamnapo": "^1.0.1",
+    "eslint-config-iamnapo": "^1.0.2",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",
@@ -45,14 +45,14 @@
   },
   "dependencies": {
     "chalk": "^2.4.2",
-    "del": "^4.0.0",
+    "del": "^4.1.0",
     "execa": "^1.0.0",
     "github-username": "^4.1.0",
     "gradient-string": "^1.2.0",
     "inquirer": "^6.2.2",
     "meow": "^5.0.0",
     "ora": "^3.2.0",
-    "replace-in-file": "^3.4.3",
+    "replace-in-file": "^3.4.4",
     "update-notifier": "^2.5.0",
     "validate-npm-package-name": "^3.0.0"
   },

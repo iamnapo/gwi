@@ -162,6 +162,7 @@ module.exports = async (
     del([Path.join(projectPath, '.travis.yml')]);
   }
   fs.renameSync(Path.join(projectPath, 'index.js'), Path.join(projectPath, `${projectName}.js`));
+  fs.writeFileSync(Path.join(projectPath, 'tests', 'unit.test.js'), 'import test from \'ava\';\n\ntest.todo(\'main\');\n');
   spinnerDelete.succeed();
 
   if (install) {
