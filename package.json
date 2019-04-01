@@ -1,6 +1,6 @@
 {
   "name": "gwi",
-  "version": "1.8.2",
+  "version": "1.8.3",
   "description": "Interactive CLI for creating new JS repositories",
   "main": "./bin/gwi.js",
   "bin": {
