@@ -6,8 +6,8 @@
 
 ## Install
 
-```bash
-npm i -g gwi
+```sh
+$ npm i -g gwi
 ```
 
 ## Usage
