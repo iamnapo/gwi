@@ -1,7 +1,6 @@
 const path = require('path');
 const execa = require('execa');
 const githubUsername = require('github-username');
-const utils = require('./utils');
 
 const inherit = 'inherit';
 
@@ -10,8 +9,6 @@ const PLACEHOLDERS = {
   NAME: 'YOUR_NAME',
   USERNAME: 'YOUR_GITHUB_USER_NAME',
 };
-
-// We implement these as function factories to make unit testing easier.
 
 const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDirectory, dir) => {
   const projectDir = path.join(workingDirectory, dir);
@@ -60,18 +57,13 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
   }
 };
 
-const getGithubUsername = fetcher => async (email) => { // eslint-disable-line require-await
-  if (email === PLACEHOLDERS.EMAIL) {
-    return PLACEHOLDERS.USERNAME;
-  }
+const getGithubUsername = fetcher => async (email) => {
+  if (email === PLACEHOLDERS.EMAIL) return PLACEHOLDERS.USERNAME;
   return fetcher(email).catch(() => PLACEHOLDERS.USERNAME);
 };
 
 const getUserInfo = spawner => async () => {
-  const opts = {
-    encoding: 'utf8',
-    stdio: ['pipe', 'pipe', inherit],
-  };
+  const opts = { encoding: 'utf8', stdio: ['pipe', 'pipe', inherit] };
   try {
     const nameResult = await spawner('git', ['config', 'user.name'], opts);
     const emailResult = await spawner('git', ['config', 'user.email'], opts);
@@ -88,45 +80,21 @@ const getUserInfo = spawner => async () => {
 };
 
 const initialCommit = spawner => async (hash, projectDir) => {
-  const opts = {
-    cwd: projectDir,
-    encoding: 'utf8',
-    stdio: 'pipe',
-  };
+  const opts = { cwd: projectDir, encoding: 'utf8', stdio: 'pipe' };
   await spawner('git', ['init'], opts);
   await spawner('git', ['add', '-A'], opts);
-  await spawner(
-    'git',
-    [
-      'commit',
-      '-m',
-      'Initial commit\n\nCreated with iamnapo/gwi',
-    ],
-    opts,
-  );
+  await spawner('git', ['commit', '-m', 'Initial commit\n\nCreated with iamnapo/gwi'], opts);
 };
 
 const install = spawner => async (runner, projectDir) => {
-  const opts = {
-    cwd: projectDir,
-    encoding: 'utf8',
-    stdio: 'pipe',
-  };
+  const opts = { cwd: projectDir, encoding: 'utf8', stdio: 'pipe' };
   try {
-    return runner === utils.RUNNER.NPM ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
+    return runner === 'npm' ? await spawner('npm', ['install'], opts) : await spawner('yarn', opts);
   } catch (error) {
     throw new Error('Installation failed. You\'ll need to install manually.');
   }
 };
 
-/**
- * Returns the URL and branch to clone. We clone the branch (tag) at the current
- * release rather than `master`. This ensures we get the exact files expected by
- * this version of the CLI. (If we cloned master, changes merged to master, but
- * not yet released, may cause unexpected results.)
- * @param {string} starterVersion the current version of this CLI
- * @return {object} the URL and branch to clone
- */
 const getRepoInfo = starterVersion => (process.env.GWI_REPO_URL
   ? {
     branch: process.env.GWI_REPO_BRANCH

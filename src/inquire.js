@@ -21,8 +21,8 @@ module.exports = async () => {
 
   const runnerQuestion = {
     choices: [
-      { name: 'npm', value: utils.RUNNER.NPM },
-      { name: 'yarn', value: utils.RUNNER.YARN },
+      { name: 'npm', value: 'npm' },
+      { name: 'yarn', value: 'yarn' },
     ],
     message: chalk.green('⛵\u{200D} Will this project use yarn or npm?'),
     name: 'runner',

@@ -23,6 +23,10 @@
     "email": "napoleonoikon@gmail.com",
     "url": "https://iamnapo.me"
   },
+  "files": [
+    "bin",
+    "src"
+  ],
   "main": "./bin/gwi.js",
   "bin": {
     "gwi": "./bin/gwi.js"
@@ -39,7 +43,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "del": "^4.1.1",
-    "execa": "^2.0.0",
+    "execa": "^2.0.1",
     "github-username": "^5.0.1",
     "gradient-string": "^1.2.0",
     "inquirer": "^6.4.1",
@@ -55,11 +59,11 @@
     "codecov": "^3.5.0",
     "eslint": "^6.0.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-config-iamnapo": "^1.0.4",
+    "eslint-config-iamnapo": "^1.0.5",
     "eslint-plugin-import": "^2.18.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.14.2",
-    "husky": "^2.5.0",
+    "husky": "^2.7.0",
     "nock": "^10.0.6",
     "nyc": "^14.1.1"
   },

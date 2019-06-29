@@ -9,7 +9,7 @@ const utils = require('./utils');
 
 (async () => {
   const argInfo = await checkArgs();
-  const userOptions = utils.hasCLIOptions(argInfo) ? argInfo : {
+  const userOptions = argInfo.projectName !== undefined ? argInfo : {
     ...argInfo,
     ...(await (() => {
       console.log(utils.getIntro(process.stdout.columns));

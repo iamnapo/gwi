@@ -71,16 +71,14 @@ module.exports = async () => {
     };
   }
   const validOrMsg = await utils.validateName(input);
-  if (typeof validOrMsg === 'string') {
-    throw new TypeError(validOrMsg);
-  }
+  if (typeof validOrMsg === 'string') throw new TypeError(validOrMsg);
 
   return {
     description: cli.flags.description,
     install: cli.flags.install,
     eslint: cli.flags.eslint,
     projectName: input,
-    runner: cli.flags.npm ? utils.RUNNER.NPM : utils.RUNNER.YARN,
+    runner: cli.flags.npm ? 'npm' : 'yarn',
     starterVersion: cli.pkg.version,
     travis: cli.flags.travis,
   };

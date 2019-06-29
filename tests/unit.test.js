@@ -57,14 +57,14 @@ test('checkArgs returns the right options', async (t) => {
     description: '',
     install: false,
     projectName: 'example-project',
-    runner: utils.RUNNER.YARN,
+    runner: 'yarn',
     starterVersion: currentVersion,
     travis: true,
     eslint: false,
   });
 });
 
-test('checkArgs always returns a GwiRequiredConfig, even in interactive mode', async (t) => {
+test('checkArgs always returns a valid config object, even in interactive mode', async (t) => {
   pretendLatestVersionIs('1.0.0');
   process.argv = ['path/to/node', 'path/to/gwi'];
   const opts = await checkArgs();
@@ -161,13 +161,13 @@ test('tasks.initialCommit: spawns 3 times', async (t) => {
 });
 
 test('tasks.install: uses the correct runner', async (t) => {
-  const mock = async runner => t.is(runner, utils.RUNNER.YARN);
-  await tasks.install(mock)(utils.RUNNER.YARN, 'pass');
+  const mock = async runner => t.is(runner, 'yarn');
+  await tasks.install(mock)('yarn', 'pass');
 });
 
 test('tasks.install: throws pretty error on failure', async (t) => {
   t.plan(2);
-  const error = await t.throwsAsync(tasks.install(mockErr())(utils.RUNNER.NPM, 'fail'));
+  const error = await t.throwsAsync(tasks.install(mockErr())('npm', 'fail'));
   t.regex(error.message, /Installation failed\. You'll need to install manually\./);
 });
 
