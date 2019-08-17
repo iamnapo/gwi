@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
-const chalk = require('chalk');
-const checkArgs = require('./args');
-const inquire = require('./inquire');
-const tasks = require('./tasks');
-const gwi = require('./gwi');
-const utils = require('./utils');
+const chalk = require("chalk");
+const checkArgs = require("./args");
+const inquire = require("./inquire");
+const tasks = require("./tasks");
+const gwi = require("./gwi");
+const utils = require("./utils");
 
 (async () => {
   const argInfo = await checkArgs();

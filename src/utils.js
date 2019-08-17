@@ -1,10 +1,10 @@
-const fs = require('fs');
-const gradient = require('gradient-string');
-const validateNpmPackageName = require('validate-npm-package-name');
-const chalk = require('chalk');
+const fs = require("fs");
+const gradient = require("gradient-string");
+const validateNpmPackageName = require("validate-npm-package-name");
+const chalk = require("chalk");
 
 function validateName(input) {
-  if (!validateNpmPackageName(input).validForNewPackages) return 'Name should be in-kebab-case.';
+  if (!validateNpmPackageName(input).validForNewPackages) return "Name should be in-kebab-case.";
   if (fs.existsSync(input)) return `The "${input}" path already exists in this directory.`;
   return true;
 }
@@ -29,7 +29,7 @@ function getIntro(columns) {
   `;
   if (columns && columns >= 85) return chalk.bold(gradient.mind(ascii));
   if (columns && columns >= 74) return chalk.bold(gradient.mind(asciiSmaller));
-  return `\n${chalk.cyan.bold.underline('Git-With-It')}\n`;
+  return `\n${chalk.cyan.bold.underline("Git-With-It")}\n`;
 }
 
 module.exports = { validateName, getIntro };

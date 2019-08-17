@@ -1,6 +1,6 @@
-const meow = require('meow');
-const updateNotifier = require('update-notifier');
-const utils = require('./utils');
+const meow = require("meow");
+const updateNotifier = require("update-notifier");
+const utils = require("./utils");
 
 module.exports = async () => {
   const cli = meow(
@@ -24,37 +24,17 @@ module.exports = async () => {
     `,
     {
       flags: {
-        description: {
-          alias: 'd',
-          default: 'a js project',
-          type: 'string',
-        },
-        travis: {
-          alias: 'ci',
-          default: false,
-          type: 'boolean',
-        },
-        yarn: {
-          default: false,
-          type: 'boolean',
-        },
-        install: {
-          default: true,
-          type: 'boolean',
-        },
-        eslint: {
-          default: true,
-          type: 'boolean',
-        },
+        description: { alias: "d", default: "a js project", type: "string" },
+        travis: { alias: "ci", default: false, type: "boolean" },
+        yarn: { default: false, type: "boolean" },
+        install: { default: true, type: "boolean" },
+        eslint: { default: true, type: "boolean" },
       },
     },
   );
 
   // Immediately check for updates every time we run gwi
-  const notifier = new updateNotifier.UpdateNotifier({
-    pkg: cli.pkg,
-    updateCheckInterval: 0,
-  });
+  const notifier = new updateNotifier.UpdateNotifier({ pkg: cli.pkg, updateCheckInterval: 0 });
   notifier.check();
   notifier.notify();
 
@@ -71,14 +51,14 @@ module.exports = async () => {
     };
   }
   const validOrMsg = await utils.validateName(input);
-  if (typeof validOrMsg === 'string') throw new TypeError(validOrMsg);
+  if (typeof validOrMsg === "string") throw new TypeError(validOrMsg);
 
   return {
     description: cli.flags.description,
     install: cli.flags.install,
     eslint: cli.flags.eslint,
     projectName: input,
-    runner: cli.flags.npm ? 'npm' : 'yarn',
+    runner: cli.flags.npm ? "npm" : "yarn",
     starterVersion: cli.pkg.version,
     travis: cli.flags.travis,
   };
