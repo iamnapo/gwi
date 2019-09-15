@@ -126,6 +126,7 @@ module.exports = async (
     `${Path.join(projectPath, ".npmignore")}`,
     `${Path.join(projectPath, "usage.gif")}`,
     `${Path.join(projectPath, "yarn.lock")}`,
+    `${Path.join(projectPath, ".github")}`,
   ]);
   if (!travis) del([Path.join(projectPath, ".travis.yml")]);
   fs.renameSync(Path.join(projectPath, "index.js"), Path.join(projectPath, `${projectName}.js`));
