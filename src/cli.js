@@ -8,17 +8,17 @@ const gwi = require("./gwi");
 const utils = require("./utils");
 
 (async () => {
-  const argInfo = await checkArgs();
-  const userOptions = argInfo.projectName !== undefined ? argInfo : {
-    ...argInfo,
-    ...(await (() => {
-      console.log(utils.getIntro(process.stdout.columns));
-      return inquire();
-    })()),
-  };
-  const options = await tasks.addInferredOptions(userOptions);
-  return gwi(options, tasks.LiveTasks);
+	const argInfo = await checkArgs();
+	const userOptions = argInfo.projectName !== undefined ? argInfo : {
+		...argInfo,
+		...(await (() => {
+			console.log(utils.getIntro(process.stdout.columns));
+			return inquire();
+		})()),
+	};
+	const options = await tasks.addInferredOptions(userOptions);
+	return gwi(options, tasks.LiveTasks);
 })().catch((error) => {
-  console.error(`${chalk.red(error.message)}`);
-  process.exit(1);
+	console.error(`${chalk.red(error.message)}`);
+	process.exit(1);
 });

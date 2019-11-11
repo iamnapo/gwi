@@ -32,8 +32,9 @@
     "gwi": "./bin/gwi.js"
   },
   "scripts": {
+    "lint": "eslint .",
     "start": "node ./bin/gwi.js",
-    "test": "eslint . && nyc ava"
+    "test": "npm run lint && nyc ava"
   },
   "husky": {
     "hooks": {
@@ -41,30 +42,30 @@
     }
   },
   "dependencies": {
-    "chalk": "^2.4.2",
+    "chalk": "^3.0.0",
     "del": "^5.1.0",
-    "execa": "^2.0.4",
+    "execa": "^3.2.0",
     "github-username": "^5.0.1",
     "gradient-string": "^1.2.0",
     "inquirer": "^7.0.0",
     "meow": "^5.0.0",
-    "ora": "^4.0.0",
-    "replace-in-file": "^4.1.3",
+    "ora": "^4.0.2",
+    "replace-in-file": "^4.2.0",
     "update-notifier": "^3.0.1",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "ava": "^2.3.0",
-    "codecov": "^3.5.0",
-    "eslint": "^6.4.0",
+    "ava": "^2.4.0",
+    "codecov": "^3.6.1",
+    "eslint": "^6.6.0",
     "eslint-config-airbnb": "^18.0.1",
-    "eslint-config-iamnapo": "^1.3.3",
+    "eslint-config-iamnapo": "^2.0.1",
     "eslint-plugin-import": "^2.18.2",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.14.3",
-    "eslint-plugin-react-hooks": "^2.0.1",
-    "husky": "^3.0.5",
-    "nock": "^11.3.4",
+    "eslint-plugin-react": "^7.16.0",
+    "eslint-plugin-react-hooks": "^2.2.0",
+    "husky": "^3.0.9",
+    "nock": "^11.7.0",
     "nyc": "^14.1.1"
   },
   "engines": {
