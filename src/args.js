@@ -41,8 +41,6 @@ module.exports = async () => {
 	const [input] = cli.input;
 	if (!input) {
 		// No project-name provided, return to collect options in interactive mode
-		// note: we always return `install` and `eslint`, so --no-install and --no-eslint always work
-		// (important for test performance)
 		return {
 			travis: cli.flags.travis,
 			install: cli.flags.install,

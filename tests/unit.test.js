@@ -1,9 +1,10 @@
-import test from "ava";
-import meow from "meow";
-import nock from "nock";
-import checkArgs from "../src/args";
-import tasks from "../src/tasks";
-import utils from "../src/utils";
+const test = require("ava");
+const meow = require("meow");
+const nock = require("nock");
+
+const checkArgs = require("../src/args");
+const tasks = require("../src/tasks");
+const utils = require("../src/utils");
 
 const pretendLatestVersionIs = (version) => {
 	nock.disableNetConnect();
@@ -45,7 +46,7 @@ test("checkArgs returns the right options", async (t) => {
 		"path/to/node",
 		"path/to/gwi",
 		"example-project",
-		"-description \"example description\"",
+		"--description=\"example description\"",
 		"--travis",
 		"--yarn",
 		"--no-eslint",
@@ -54,7 +55,7 @@ test("checkArgs returns the right options", async (t) => {
 	const opts = await checkArgs();
 	const currentVersion = meow("").pkg.version;
 	t.deepEqual(opts, {
-		description: "",
+		description: "example description",
 		install: false,
 		projectName: "example-project",
 		runner: "yarn",
