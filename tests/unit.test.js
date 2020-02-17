@@ -109,22 +109,17 @@ test("tasks.cloneRepo: throws when rev-parse fails", async (t) => {
 });
 
 test("tasks.getGithubUsername: returns found users", async (t) => {
-	const mockFetcher = async (email) => email.split("@")[0];
-	const username = await tasks.getGithubUsername(mockFetcher)("iamnapo@github.com");
+	const username = await tasks.getGithubUsername(async (email) => email.split("@")[0])("iamnapo@github.com");
 	t.is(username, "iamnapo");
 });
 
 test("tasks.getGithubUsername: returns placeholder if user doesn't have Git user.email set", async (t) => {
-	const mockFetcher = async () => {};
-	const username = await tasks.getGithubUsername(mockFetcher)(tasks.PLACEHOLDERS.EMAIL);
+	const username = await tasks.getGithubUsername(async () => {})(tasks.PLACEHOLDERS.EMAIL);
 	t.is(username, tasks.PLACEHOLDERS.USERNAME);
 });
 
 test("tasks.getGithubUsername: returns placeholder if not found", async (t) => {
-	const mockFetcher = async () => {
-		throw new Error("An error");
-	};
-	const username = await tasks.getGithubUsername(mockFetcher)("iamnapo@github.com");
+	const username = await tasks.getGithubUsername(async () => { throw new Error("An error"); })("iamnapo@github.com");
 	t.is(username, tasks.PLACEHOLDERS.USERNAME);
 });
 
@@ -137,8 +132,7 @@ test("tasks.getUserInfo: suppresses errors and returns empty strings", async (t)
 });
 
 test("tasks.getUserInfo: returns results properly", async (t) => {
-	const mock = async () => ({ stdout: "result" });
-	const result = await tasks.getUserInfo(mock)();
+	const result = await tasks.getUserInfo(async () => ({ stdout: "result" }))();
 	t.deepEqual(result, {
 		gitEmail: "result",
 		gitName: "result",

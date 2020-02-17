@@ -5,7 +5,10 @@ const del = require("del");
 const ora = require("ora");
 const replace = require("replace-in-file");
 const execa = require("execa");
+
 const tasks = require("./tasks");
+
+const filterAllBut = (keep, from) => keep.reduce((acc, moduleName) => ({ ...acc, [moduleName]: from[moduleName] }), {});
 
 module.exports = async (
 	{
@@ -39,12 +42,10 @@ module.exports = async (
 	const keptDevDeps = ["ava", "nyc", "husky"];
 	if (eslint) {
 		keptDevDeps.push("babel-eslint", "eslint", "eslint-config-airbnb", "eslint-config-iamnapo", "eslint-plugin-import",
-			"eslint-plugin-jsx-a11y", "eslint-plugin-react", "eslint-plugin-react-hooks");
+			"eslint-plugin-jsx-a11y", "eslint-plugin-react", "eslint-plugin-react-hooks", "eslint-plugin-unicorn");
 	}
 	const keptDeps = [];
-	const filterAllBut = (keep, from) => keep.reduce((acc, moduleName) => ({ ...acc, [moduleName]: from[moduleName] }), {});
-	const readPackageJson = (path) => JSON.parse(fs.readFileSync(path, "utf8"));
-	const pkg = readPackageJson(pkgPath);
+	const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 	const newPkg = {
 		...pkg,
 		name: projectName,
