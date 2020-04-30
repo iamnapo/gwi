@@ -23,14 +23,14 @@
     "email": "napoleonoikon@gmail.com",
     "url": "https://iamnapo.me"
   },
-  "files": [
-    "bin",
-    "src"
-  ],
   "main": "./bin/gwi.js",
   "bin": {
     "gwi": "./bin/gwi.js"
   },
+  "files": [
+    "bin",
+    "src"
+  ],
   "scripts": {
     "lint": "eslint .",
     "start": "node ./bin/gwi.js",
@@ -56,7 +56,6 @@
   },
   "devDependencies": {
     "ava": "^3.8.1",
-    "codecov": "^3.6.5",
     "eslint": "^6.8.0",
     "eslint-config-airbnb": "^18.1.0",
     "eslint-config-iamnapo": "^3.1.0",

@@ -41,7 +41,7 @@ module.exports = async (
 	const pkgPath = Path.join(projectPath, "package.json");
 	const keptDevDeps = ["ava", "nyc", "husky"];
 	if (eslint) {
-		keptDevDeps.push("babel-eslint", "eslint", "eslint-config-airbnb", "eslint-config-iamnapo", "eslint-plugin-import",
+		keptDevDeps.push("eslint", "eslint-config-airbnb", "eslint-config-iamnapo", "eslint-plugin-import",
 			"eslint-plugin-jsx-a11y", "eslint-plugin-react", "eslint-plugin-react-hooks", "eslint-plugin-unicorn");
 	}
 	const keptDeps = [];
@@ -54,7 +54,7 @@ module.exports = async (
 		scripts: {
 			...(eslint ? { lint: "eslint ." } : {}),
 			start: "node ./bin/gwi.js",
-			test: eslint ? "npm run lint && nyc ava" : "nyc ava",
+			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && nyc ava` : "nyc ava",
 		},
 		husky: { hooks: { "pre-commit": `${runner} test` } },
 		repository: `github:${githubUsername}/${projectName}`,
@@ -67,14 +67,11 @@ module.exports = async (
 		dependencies: filterAllBut(keptDeps, pkg.dependencies),
 		devDependencies: filterAllBut(keptDevDeps, pkg.devDependencies),
 		keywords: [],
+		files: ["src", `${projectName}.js`],
 	};
 	delete newPkg.bin;
 
-	const writePackageJson = (path, pakg) => {
-		const stringified = `${JSON.stringify(pakg, null, 2)}\n`;
-		return fs.writeFileSync(path, stringified);
-	};
-	writePackageJson(pkgPath, newPkg);
+	fs.writeFileSync(pkgPath, `${JSON.stringify(newPkg, null, 2)}\n`);
 	await replace({
 		files: Path.join(projectPath, "package.json"),
 		from: [/\.\/bin\/gwi/g, /gwi/g, /iamnapo/g],
@@ -99,8 +96,8 @@ module.exports = async (
 	await replace({ files: Path.join(projectPath, "README.md"), from: [/gwi/g, /iamnapo/g], to: [projectName, githubUsername] });
 	await replace({
 		files: Path.join(projectPath, "README.md"),
-		from: ["Interactive CLI for creating new JS repositories", "![Usage](usage.gif)"],
-		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``],
+		from: ["Interactive CLI for creating new JS repositories", "![Usage](usage.gif)", "-g "],
+		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``, ""],
 	});
 	if (!ci) {
 		await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[b.*actions\) /g, to: "" });
