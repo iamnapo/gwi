@@ -97,7 +97,7 @@ module.exports = async (
 	await replace({
 		files: Path.join(projectPath, "README.md"),
 		from: ["Interactive CLI for creating new JS repositories", "![Usage](usage.gif)", "-g "],
-		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``, ""],
+		to: [description, `\`\`\`sh\n$ ${projectName}\n\`\`\``, ""],
 	});
 	if (!ci) {
 		await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[b.*actions\) /g, to: "" });
