@@ -13,9 +13,9 @@ module.exports = async () => {
 
 	Options
 		--description, -d   package.json description
-		--travis , -ci      include Travis CI configuration
 		--yarn              use yarn (default: npm)
 
+		--no-ci             don't include CI configuration
 		--no-install        skip yarn/npm install
 		--no-eslint         don't include eslint
 
@@ -25,7 +25,7 @@ module.exports = async () => {
 		{
 			flags: {
 				description: { alias: "d", default: "a js project", type: "string" },
-				travis: { alias: "ci", default: false, type: "boolean" },
+				ci: { default: true, type: "boolean" },
 				yarn: { default: false, type: "boolean" },
 				install: { default: true, type: "boolean" },
 				eslint: { default: true, type: "boolean" },
@@ -42,7 +42,7 @@ module.exports = async () => {
 	if (!input) {
 		// No project-name provided, return to collect options in interactive mode
 		return {
-			travis: cli.flags.travis,
+			ci: cli.flags.ci,
 			install: cli.flags.install,
 			eslint: cli.flags.eslint,
 			starterVersion: cli.pkg.version,
@@ -58,6 +58,6 @@ module.exports = async () => {
 		projectName: input,
 		runner: cli.flags.npm ? "npm" : "yarn",
 		starterVersion: cli.pkg.version,
-		travis: cli.flags.travis,
+		ci: cli.flags.ci,
 	};
 };

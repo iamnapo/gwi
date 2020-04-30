@@ -20,7 +20,7 @@ module.exports = async (
 		projectName,
 		repoInfo,
 		runner,
-		travis,
+		ci,
 		workingDirectory,
 		eslint,
 	},
@@ -83,41 +83,38 @@ module.exports = async (
 	spinnerPackage.succeed();
 
 	const spinnerLicense = ora("Updating LICENSE").start();
-	if (!masterIsHere) {
-		await replace({
-			files: Path.join(projectPath, "LICENSE"),
-			from: ["Napoleon-Christos Oikonomou", "napoleonoikon@gmail.com", "iamnapo.me"],
-			to: [fullName, email, `github.com/${githubUsername}`],
-		});
-	}
+	await replace({
+		files: Path.join(projectPath, "LICENSE"),
+		from: ["Napoleon-Christos Oikonomou", "napoleonoikon@gmail.com", "iamnapo.me"],
+		to: [
+			masterIsHere ? "Napoleon-Christos Oikonomou" : fullName,
+			email,
+			masterIsHere ? "https://iamnapo.me" : `https://github.com/${githubUsername}`,
+		],
+	});
 	spinnerLicense.succeed();
 
 	const spinnerReadme = ora("Updating README.md").start();
-	await replace({ files: Path.join(projectPath, "README.md"), from: /\n## A.*\n\n.*\n/g, to: "" });
-	await replace({ files: Path.join(projectPath, "README.md"), from: / \[!\[G.*/g, to: "" });
 	await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[n.*gwi\) /g, to: "" });
-	if (!travis) {
-		await replace({ files: Path.join(projectPath, "README.md"), from: /\[!.*gwi\) /g, to: "" });
-	}
-	if (!masterIsHere) {
-		await replace({
-			files: Path.join(projectPath, "README.md"),
-			from: ["Napoleon-Christos Oikonomou", "napoleonoikon@gmail.com", "iamnapo.me"],
-			to: [fullName, email, `github.com/${githubUsername}`],
-		});
-	}
 	await replace({ files: Path.join(projectPath, "README.md"), from: [/gwi/g, /iamnapo/g], to: [projectName, githubUsername] });
 	await replace({
 		files: Path.join(projectPath, "README.md"),
 		from: ["Interactive CLI for creating new JS repositories", "![Usage](usage.gif)"],
 		to: [description, `\`\`\`\n$ ${projectName}\n\`\`\``],
 	});
+	if (!ci) {
+		await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[b.*actions\) /g, to: "" });
+	}
 	spinnerReadme.succeed();
 
-	if (travis) {
-		const spinnerTravis = ora("Updating .travis.yml").start();
-		await replace({ files: Path.join(projectPath, ".travis.yml"), from: [/npm/g, /^after.*\n.*codecov/g], to: [runner, ""] });
-		spinnerTravis.succeed();
+	if (ci) {
+		const spinnerCI = ora("Updating CI .yml").start();
+		await replace({
+			files: Path.join(projectPath, ".github", "workflows", "ci.yml"),
+			from: [/yarn/g, /(?<=(true\n))(.|\n)*/g],
+			to: [runner, ""],
+		});
+		spinnerCI.succeed();
 	}
 
 	const spinnerDelete = ora("Deleting unnecessary files").start();
@@ -128,9 +125,9 @@ module.exports = async (
 		`${Path.join(projectPath, ".npmignore")}`,
 		`${Path.join(projectPath, "usage.gif")}`,
 		`${Path.join(projectPath, "yarn.lock")}`,
-		`${Path.join(projectPath, ".github")}`,
+		`${Path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
-	if (!travis) del([Path.join(projectPath, ".travis.yml")]);
+	if (!ci) del([Path.join(projectPath, ".github")]);
 	fs.renameSync(Path.join(projectPath, "index.js"), Path.join(projectPath, `${projectName}.js`));
 	fs.writeFileSync(Path.join(projectPath, "tests", "unit.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
 	spinnerDelete.succeed();

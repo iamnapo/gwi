@@ -47,7 +47,7 @@ test("checkArgs returns the right options", async (t) => {
 		"path/to/gwi",
 		"example-project",
 		"--description=\"example description\"",
-		"--travis",
+		"--ci",
 		"--yarn",
 		"--no-eslint",
 		"--no-install",
@@ -60,7 +60,7 @@ test("checkArgs returns the right options", async (t) => {
 		projectName: "example-project",
 		runner: "yarn",
 		starterVersion: currentVersion,
-		travis: true,
+		ci: true,
 		eslint: false,
 	});
 });

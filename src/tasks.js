@@ -19,8 +19,8 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 			["clone", "--depth=1", `--branch=${repoInfo.branch}`, repoInfo.repo, dir],
 			{ cwd: workingDirectory, stdio: suppressOutput ? "pipe" : "inherit" },
 		);
-	} catch (err) {
-		if (err.code === "ENOENT") {
+	} catch (error) {
+		if (error.code === "ENOENT") {
 			throw new Error(`
     Git is not installed on your PATH. Please install Git and try again.
 
@@ -33,7 +33,7 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 					["clone", "--depth=1", "--branch=master", repoInfo.repo, dir],
 					{ cwd: workingDirectory, stdio: suppressOutput ? "pipe" : "inherit" },
 				);
-			} catch (e) {
+			} catch (_) {
 				throw new Error("Git clone failed.");
 			}
 		}
@@ -111,7 +111,7 @@ const addInferredOptions = async (userOptions) => {
 		projectName: userOptions.projectName,
 		runner: userOptions.runner,
 		eslint: userOptions.eslint,
-		travis: userOptions.travis,
+		ci: userOptions.ci,
 	};
 };
 

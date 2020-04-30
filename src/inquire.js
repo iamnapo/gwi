@@ -27,13 +27,13 @@ module.exports = async () => {
 	};
 
 	const Extras = {
-		travis: "travis",
+		ci: "ci",
 		eslint: "eslint",
 		install: "install",
 	};
 	const extrasQuestion = {
 		choices: [
-			{ checked: false, name: "Include Travis CI config", value: Extras.travis },
+			{ checked: true, name: "Include CI config", value: Extras.ci },
 			{ checked: true, name: "Include eslint", value: Extras.eslint },
 			{ checked: true, name: "Install default dependencies", value: Extras.install },
 		],
@@ -50,6 +50,6 @@ module.exports = async () => {
 		eslint: extras.includes(Extras.eslint),
 		projectName,
 		runner,
-		travis: extras.includes(Extras.travis),
+		ci: extras.includes(Extras.ci),
 	};
 };

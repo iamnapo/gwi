@@ -1,0 +1,31 @@
+name: Install & test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    paths-ignore:
+      - "*.md"
+      - "docs/**"
+      - "media/**"
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+      - run: yarn
+      - run: yarn test
+        env:
+          CI: true
+      - name: Generate coverage report
+        run: yarn nyc report --reporter=text-lcov > coverage.lcov
+      - uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage.lcov
+          yml: ./codecov.yml

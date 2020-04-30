@@ -64,6 +64,5 @@ typings/
 .editorconfig
 .eslintrc.json
 .gitattributes
-.travis.yml
 index.js
 usage.gif
