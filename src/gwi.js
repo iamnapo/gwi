@@ -74,7 +74,7 @@ module.exports = async (
 	fs.writeFileSync(pkgPath, `${JSON.stringify(newPkg, null, 2)}\n`);
 	await replace({
 		files: Path.join(projectPath, "package.json"),
-		from: [/\.\/bin\/gwi/g, /gwi/g, /iamnapo/g],
+		from: [/\.\/bin\/gwi/g, /gwi/g, /(?<=[^-])iamnapo/g],
 		to: [projectName, projectName, githubUsername],
 	});
 	spinnerPackage.succeed();
@@ -108,8 +108,8 @@ module.exports = async (
 		const spinnerCI = ora("Updating CI .yml").start();
 		await replace({
 			files: Path.join(projectPath, ".github", "workflows", "ci.yml"),
-			from: [/yarn/g, /(?<=(true\n))(.|\n)*/g],
-			to: [runner, ""],
+			from: [/yarn\n/g, /yarn(?<! )/g, /(?<=(true\n))(.|\n)*/g],
+			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner, ""],
 		});
 		spinnerCI.succeed();
 	}
