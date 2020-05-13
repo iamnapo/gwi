@@ -33,7 +33,7 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 					["clone", "--depth=1", "--branch=master", repoInfo.repo, dir],
 					{ cwd: workingDirectory, stdio: suppressOutput ? "pipe" : "inherit" },
 				);
-			} catch (_) {
+			} catch {
 				throw new Error("Git clone failed.");
 			}
 		}
@@ -46,7 +46,7 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 		});
 		const commitHash = revParseResult.stdout;
 		return { commitHash, gitHistoryDir };
-	} catch (error) {
+	} catch {
 		throw new Error("Git rev-parse failed.");
 	}
 };
@@ -62,7 +62,7 @@ const getUserInfo = (spawner) => async () => {
 		const nameResult = await spawner("git", ["config", "user.name"], opts);
 		const emailResult = await spawner("git", ["config", "user.email"], opts);
 		return { gitEmail: emailResult.stdout, gitName: nameResult.stdout };
-	} catch (error) {
+	} catch {
 		return { gitEmail: PLACEHOLDERS.EMAIL, gitName: PLACEHOLDERS.NAME };
 	}
 };
@@ -78,7 +78,7 @@ const install = (spawner) => async (runner, projectDir) => {
 	const opts = { cwd: projectDir, encoding: "utf8", stdio: "pipe" };
 	try {
 		return runner === "npm" ? await spawner("npm", ["install"], opts) : await spawner("yarn", opts);
-	} catch (error) {
+	} catch {
 		throw new Error("Installation failed. You'll need to install manually.");
 	}
 };
