@@ -1,4 +1,4 @@
-name: Install & test
+name: ci
 
 on:
   push:
@@ -10,14 +10,13 @@ on:
       - "docs/**"
       - "media/**"
 jobs:
-  test:
-    name: Test
+  ci:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: "12.x"
+          node-version: 14
       - run: yarn
       - run: yarn test
         env:

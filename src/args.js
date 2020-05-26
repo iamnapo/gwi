@@ -1,5 +1,6 @@
 const meow = require("meow");
 const updateNotifier = require("update-notifier");
+
 const utils = require("./utils");
 
 module.exports = async () => {

@@ -1,5 +1,6 @@
 const inquirer = require("inquirer");
 const chalk = require("chalk");
+
 const utils = require("./utils");
 
 module.exports = async () => {

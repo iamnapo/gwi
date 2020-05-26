@@ -1,5 +1,6 @@
 const fs = require("fs");
-const Path = require("path");
+const path = require("path");
+
 const chalk = require("chalk");
 const del = require("del");
 const ora = require("ora");
@@ -37,8 +38,8 @@ module.exports = async (
 	clonePackage.succeed(`Cloning default repository. ${chalk.dim(`Cloned at commit: ${commitHash}`)}`);
 
 	const spinnerPackage = ora("Updating package.json").start();
-	const projectPath = Path.join(workingDirectory, projectName);
-	const pkgPath = Path.join(projectPath, "package.json");
+	const projectPath = path.join(workingDirectory, projectName);
+	const pkgPath = path.join(projectPath, "package.json");
 	const keptDevDeps = ["ava", "nyc", "husky"];
 	if (eslint) {
 		keptDevDeps.push("eslint", "eslint-config-airbnb", "eslint-config-iamnapo", "eslint-plugin-import",
@@ -73,7 +74,7 @@ module.exports = async (
 
 	fs.writeFileSync(pkgPath, `${JSON.stringify(newPkg, null, 2)}\n`);
 	await replace({
-		files: Path.join(projectPath, "package.json"),
+		files: path.join(projectPath, "package.json"),
 		from: [/\.\/bin\/gwi/g, /gwi/g, /(?<=[^-])iamnapo/g],
 		to: [projectName, projectName, githubUsername],
 	});
@@ -81,7 +82,7 @@ module.exports = async (
 
 	const spinnerLicense = ora("Updating LICENSE").start();
 	await replace({
-		files: Path.join(projectPath, "LICENSE"),
+		files: path.join(projectPath, "LICENSE"),
 		from: ["Napoleon-Christos Oikonomou", "napoleonoikon@gmail.com", "iamnapo.me"],
 		to: [
 			masterIsHere ? "Napoleon-Christos Oikonomou" : fullName,
@@ -92,22 +93,22 @@ module.exports = async (
 	spinnerLicense.succeed();
 
 	const spinnerReadme = ora("Updating README.md").start();
-	await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[n.*gwi\) /g, to: "" });
-	await replace({ files: Path.join(projectPath, "README.md"), from: [/gwi/g, /iamnapo/g], to: [projectName, githubUsername] });
+	await replace({ files: path.join(projectPath, "README.md"), from: /\[!\[n.*gwi\) /g, to: "" });
+	await replace({ files: path.join(projectPath, "README.md"), from: [/gwi/g, /iamnapo/g], to: [projectName, githubUsername] });
 	await replace({
-		files: Path.join(projectPath, "README.md"),
+		files: path.join(projectPath, "README.md"),
 		from: ["Interactive CLI for creating new JS repositories", "![Usage](usage.gif)", "-g "],
 		to: [description, `\`\`\`sh\n$ ${projectName}\n\`\`\``, ""],
 	});
 	if (!ci) {
-		await replace({ files: Path.join(projectPath, "README.md"), from: /\[!\[b.*actions\) /g, to: "" });
+		await replace({ files: path.join(projectPath, "README.md"), from: /\[!\[b.*actions\) /g, to: "" });
 	}
 	spinnerReadme.succeed();
 
 	if (ci) {
 		const spinnerCI = ora("Updating CI .yml").start();
 		await replace({
-			files: Path.join(projectPath, ".github", "workflows", "ci.yml"),
+			files: path.join(projectPath, ".github", "workflows", "ci.yml"),
 			from: [/yarn\n/g, /yarn(?<! )/g, /(?<=(true\n))(.|\n)*/g],
 			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner, ""],
 		});
@@ -116,17 +117,17 @@ module.exports = async (
 
 	const spinnerDelete = ora("Deleting unnecessary files").start();
 	await del([
-		`${Path.join(projectPath, "src")}/*`,
-		`${Path.join(projectPath, "tests")}/*`,
-		`${Path.join(projectPath, "bin")}`,
-		`${Path.join(projectPath, ".npmignore")}`,
-		`${Path.join(projectPath, "usage.gif")}`,
-		`${Path.join(projectPath, "yarn.lock")}`,
-		`${Path.join(projectPath, ".github", "workflows", "publish.yml")}`,
+		`${path.join(projectPath, "src")}/*`,
+		`${path.join(projectPath, "tests")}/*`,
+		`${path.join(projectPath, "bin")}`,
+		`${path.join(projectPath, ".npmignore")}`,
+		`${path.join(projectPath, "usage.gif")}`,
+		`${path.join(projectPath, "yarn.lock")}`,
+		`${path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
-	if (!ci) del([Path.join(projectPath, ".github")]);
-	fs.renameSync(Path.join(projectPath, "index.js"), Path.join(projectPath, `${projectName}.js`));
-	fs.writeFileSync(Path.join(projectPath, "tests", "unit.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
+	if (!ci) del([path.join(projectPath, ".github")]);
+	fs.renameSync(path.join(projectPath, "index.js"), path.join(projectPath, `${projectName}.js`));
+	fs.writeFileSync(path.join(projectPath, "tests", "unit.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
 	spinnerDelete.succeed();
 
 	if (install) {

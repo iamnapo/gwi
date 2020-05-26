@@ -1,4 +1,5 @@
 const fs = require("fs");
+
 const gradient = require("gradient-string");
 const validateNpmPackageName = require("validate-npm-package-name");
 const chalk = require("chalk");
