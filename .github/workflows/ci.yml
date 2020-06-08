@@ -1,14 +1,7 @@
 name: ci
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    paths-ignore:
-      - "*.md"
-      - "docs/**"
-      - "media/**"
+on: push
+
 jobs:
   ci:
     runs-on: ubuntu-latest
@@ -19,8 +12,6 @@ jobs:
           node-version: 14
       - run: yarn
       - run: yarn test
-        env:
-          CI: true
       - name: Generate coverage report
         run: yarn nyc report --reporter=text-lcov > coverage.lcov
       - uses: codecov/codecov-action@v1

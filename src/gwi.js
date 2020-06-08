@@ -41,10 +41,7 @@ module.exports = async (
 	const projectPath = path.join(workingDirectory, projectName);
 	const pkgPath = path.join(projectPath, "package.json");
 	const keptDevDeps = ["ava", "nyc", "husky"];
-	if (eslint) {
-		keptDevDeps.push("eslint", "eslint-config-airbnb", "eslint-config-iamnapo", "eslint-plugin-import",
-			"eslint-plugin-jsx-a11y", "eslint-plugin-react", "eslint-plugin-react-hooks", "eslint-plugin-unicorn");
-	}
+	if (eslint) keptDevDeps.push("eslint", "eslint-config-iamnapo", "eslint-plugin-import", "eslint-plugin-unicorn");
 	const keptDeps = [];
 	const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
 	const newPkg = {
@@ -52,8 +49,9 @@ module.exports = async (
 		name: projectName,
 		version: "0.1.0",
 		description,
+		private: true,
 		scripts: {
-			...(eslint ? { lint: "eslint ." } : {}),
+			...(eslint ? { lint: "eslint . --cache" } : {}),
 			start: "node ./bin/gwi.js",
 			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && nyc ava` : "nyc ava",
 		},
@@ -109,7 +107,7 @@ module.exports = async (
 		const spinnerCI = ora("Updating CI .yml").start();
 		await replace({
 			files: path.join(projectPath, ".github", "workflows", "ci.yml"),
-			from: [/yarn\n/g, /yarn(?<! )/g, /(?<=(true\n))(.|\n)*/g],
+			from: [/yarn\n/g, /yarn(?<! )/g, /(?<=( test\n))(.|\n)*/g],
 			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner, ""],
 		});
 		spinnerCI.succeed();
