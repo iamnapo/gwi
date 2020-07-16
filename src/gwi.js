@@ -52,7 +52,7 @@ module.exports = async (
 		private: true,
 		scripts: {
 			...(eslint ? { lint: "eslint . --cache" } : {}),
-			start: "node ./bin/gwi.js",
+			start: "node index.js",
 			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && nyc ava` : "nyc ava",
 		},
 		husky: { hooks: { "pre-commit": `${runner} test` } },
@@ -73,8 +73,8 @@ module.exports = async (
 	fs.writeFileSync(pkgPath, `${JSON.stringify(newPkg, null, 2)}\n`);
 	await replace({
 		files: path.join(projectPath, "package.json"),
-		from: [/\.\/bin\/gwi/g, /gwi/g, /(?<=[^-])iamnapo/g],
-		to: [projectName, projectName, githubUsername],
+		from: [/gwi/g, /(?<=[^-])iamnapo/g],
+		to: [projectName, githubUsername],
 	});
 	spinnerPackage.succeed();
 
@@ -124,8 +124,7 @@ module.exports = async (
 		`${path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
 	if (!ci) del([path.join(projectPath, ".github")]);
-	fs.renameSync(path.join(projectPath, "index.js"), path.join(projectPath, `${projectName}.js`));
-	fs.writeFileSync(path.join(projectPath, "tests", "unit.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
+	fs.writeFileSync(path.join(projectPath, "tests", "init.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
 	spinnerDelete.succeed();
 
 	if (install) {
