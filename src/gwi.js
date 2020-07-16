@@ -66,7 +66,8 @@ module.exports = async (
 		dependencies: filterAllBut(keptDeps, pkg.dependencies),
 		devDependencies: filterAllBut(keptDevDeps, pkg.devDependencies),
 		keywords: [],
-		files: ["src", `${projectName}.js`],
+		files: ["src", "index.js"],
+		main: "index.js",
 	};
 	delete newPkg.bin;
 

@@ -34,10 +34,7 @@ module.exports = async () => {
 		},
 	);
 
-	// Immediately check for updates every time we run gwi
-	const notifier = new updateNotifier.UpdateNotifier({ pkg: cli.pkg, updateCheckInterval: 0 });
-	notifier.check();
-	notifier.notify();
+	updateNotifier({ pkg: cli.pkg }).notify();
 
 	const [input] = cli.input;
 	if (!input) {
