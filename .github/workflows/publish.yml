@@ -15,6 +15,6 @@ jobs:
           node-version: 14
           registry-url: https://npm.pkg.github.com/
           scope: "@iamnapo"
-      - run: yarn publish
+      - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

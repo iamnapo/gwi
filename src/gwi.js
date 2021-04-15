@@ -108,7 +108,7 @@ module.exports = async (
 		const spinnerCI = ora("Updating CI .yml").start();
 		await replace({
 			files: path.join(projectPath, ".github", "workflows", "ci.yml"),
-			from: [/yarn\n/g, /yarn(?<! )/g, /(?<=( test\n))(.|\n)*/g],
+			from: [/npm\n/g, /npm(?<! )/g, /(?<=( test\n))(.|\n)*/g],
 			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner, ""],
 		});
 		spinnerCI.succeed();
@@ -121,7 +121,6 @@ module.exports = async (
 		`${path.join(projectPath, "bin")}`,
 		`${path.join(projectPath, ".npmignore")}`,
 		`${path.join(projectPath, "usage.gif")}`,
-		`${path.join(projectPath, "yarn.lock")}`,
 		`${path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
 	if (!ci) del([path.join(projectPath, ".github")]);

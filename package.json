@@ -25,7 +25,7 @@
   },
   "main": "./bin/gwi.js",
   "bin": {
-    "gwi": "./bin/gwi.js"
+    "gwi": "bin/gwi.js"
   },
   "files": [
     "bin",
@@ -34,11 +34,11 @@
   "scripts": {
     "lint": "eslint . --cache",
     "start": "node ./bin/gwi.js",
-    "test": "yarn lint && nyc ava"
+    "test": "npm run lint && nyc ava"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn test"
+      "pre-commit": "npm test"
     }
   },
   "dependencies": {
@@ -47,21 +47,21 @@
     "execa": "^4.0.3",
     "github-username": "^5.0.1",
     "gradient-string": "^1.2.0",
-    "inquirer": "^7.3.2",
-    "meow": "^7.0.1",
-    "ora": "^4.0.4",
+    "inquirer": "^7.3.3",
+    "meow": "^7.1.1",
+    "ora": "^5.1.0",
     "replace-in-file": "^6.1.0",
-    "update-notifier": "^4.1.0",
+    "update-notifier": "^4.1.1",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "ava": "^3.10.1",
-    "eslint": "^7.4.0",
-    "eslint-config-iamnapo": "^6.0.3",
+    "ava": "^3.12.1",
+    "eslint": "^7.9.0",
+    "eslint-config-iamnapo": "^8.0.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-unicorn": "^20.1.0",
-    "husky": "^4.2.5",
-    "nock": "^13.0.2",
+    "eslint-plugin-unicorn": "^22.0.0",
+    "husky": "^4.3.0",
+    "nock": "^13.0.4",
     "nyc": "^15.1.0"
   },
   "engines": {
