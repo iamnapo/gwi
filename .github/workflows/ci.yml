@@ -14,8 +14,6 @@ jobs:
       - run: yarn test
       - name: Generate coverage report
         run: yarn nyc report --reporter=text-lcov > coverage.lcov
-      - run: env
-#       - uses: codecov/codecov-action@v1
-#         with:
-#           token: ${{ secrets.CODECOV_TOKEN }}
-#           file: ./coverage.lcov
+      - uses: codecov/codecov-action@v1
+        with:
+          file: ./coverage.lcov
