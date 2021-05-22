@@ -1,17 +1,17 @@
-const path = require("path");
+import path from "node:path";
 
-const execa = require("execa");
-const githubUsername = require("github-username");
+import execa from "execa";
+import githubUsername from "github-username";
 
-const inherit = "inherit";
+export const inherit = "inherit";
 
-const PLACEHOLDERS = {
+export const PLACEHOLDERS = {
 	EMAIL: "YOUR_EMAIL",
 	NAME: "YOUR_NAME",
 	USERNAME: "YOUR_GITHUB_USER_NAME",
 };
 
-const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDirectory, dir) => {
+export const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDirectory, dir) => {
 	const projectDir = path.join(workingDirectory, dir);
 	const gitHistoryDir = path.join(projectDir, ".git");
 	try {
@@ -52,12 +52,16 @@ const cloneRepo = (spawner, suppressOutput = true) => async (repoInfo, workingDi
 	}
 };
 
-const getGithubUsername = (fetcher) => async (email) => {
-	if (email === PLACEHOLDERS.EMAIL) return PLACEHOLDERS.USERNAME;
-	return fetcher(email).catch(() => PLACEHOLDERS.USERNAME);
+export const getGithubUsername = (fetcher) => (email) => {
+	try {
+		if (email === PLACEHOLDERS.EMAIL) return PLACEHOLDERS.USERNAME;
+		return fetcher(email);
+	} catch {
+		return PLACEHOLDERS.USERNAME;
+	}
 };
 
-const getUserInfo = (spawner) => async () => {
+export const getUserInfo = (spawner) => async () => {
 	const opts = { encoding: "utf8", stdio: ["pipe", "pipe", inherit] };
 	try {
 		const nameResult = await spawner("git", ["config", "user.name"], opts);
@@ -68,14 +72,14 @@ const getUserInfo = (spawner) => async () => {
 	}
 };
 
-const initialCommit = (spawner) => async (hash, projectDir) => {
+export const initialCommit = (spawner) => async (hash, projectDir) => {
 	const opts = { cwd: projectDir, encoding: "utf8", stdio: "pipe" };
 	await spawner("git", ["init"], opts);
 	await spawner("git", ["add", "-A"], opts);
 	await spawner("git", ["commit", "-m", "Initial commit\n\nCreated with iamnapo/gwi"], opts);
 };
 
-const install = (spawner) => async (runner, projectDir) => {
+export const install = (spawner) => async (runner, projectDir) => {
 	const opts = { cwd: projectDir, encoding: "utf8", stdio: "pipe" };
 	try {
 		return runner === "npm" ? await spawner("npm", ["install"], opts) : await spawner("yarn", opts);
@@ -84,18 +88,18 @@ const install = (spawner) => async (runner, projectDir) => {
 	}
 };
 
-const getRepoInfo = (starterVersion) => (process.env.GWI_REPO_URL
+export const getRepoInfo = (starterVersion) => (process.env.GWI_REPO_URL
 	? { branch: process.env.GWI_REPO_BRANCH ? process.env.GWI_REPO_BRANCH : "master", repo: process.env.GWI_REPO_URL }
 	: { branch: `v${starterVersion}`, repo: "https://github.com/iamnapo/gwi.git" }
 );
 
-const LiveTasks = {
+export const LiveTasks = {
 	cloneRepo: cloneRepo(execa),
 	initialCommit: initialCommit(execa),
 	install: install(execa),
 };
 
-const addInferredOptions = async (userOptions) => {
+export const addInferredOptions = async (userOptions) => {
 	const { gitName, gitEmail } = await getUserInfo(execa)();
 	const username = await getGithubUsername(githubUsername)(gitEmail);
 	const inferredOptions = {
@@ -114,17 +118,4 @@ const addInferredOptions = async (userOptions) => {
 		eslint: userOptions.eslint,
 		ci: userOptions.ci,
 	};
-};
-
-module.exports = {
-	inherit,
-	PLACEHOLDERS,
-	cloneRepo,
-	getGithubUsername,
-	getUserInfo,
-	initialCommit,
-	install,
-	getRepoInfo,
-	LiveTasks,
-	addInferredOptions,
 };

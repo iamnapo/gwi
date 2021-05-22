@@ -23,7 +23,8 @@
     "email": "napoleonoikon@gmail.com",
     "url": "https://iamnapo.me"
   },
-  "main": "./bin/gwi.js",
+  "type": "module",
+  "exports": "./bin/gwi.js",
   "bin": {
     "gwi": "bin/gwi.js"
   },
@@ -34,35 +35,32 @@
   "scripts": {
     "lint": "eslint . --cache",
     "start": "node ./bin/gwi.js",
-    "test": "npm run lint && nyc ava"
+    "test": "npm run lint && c8 ava"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "npm test"
-    }
+  "eslintConfig": {
+    "extends": "iamnapo"
   },
   "dependencies": {
-    "chalk": "^4.1.0",
-    "del": "^5.1.0",
-    "execa": "^4.0.3",
-    "github-username": "^5.0.1",
+    "chalk": "^4.1.1",
+    "del": "^6.0.0",
+    "execa": "^5.0.0",
+    "github-username": "^6.0.0",
     "gradient-string": "^1.2.0",
-    "inquirer": "^7.3.3",
-    "meow": "^7.1.1",
-    "ora": "^5.1.0",
-    "replace-in-file": "^6.1.0",
-    "update-notifier": "^4.1.1",
+    "inquirer": "^8.1.0",
+    "meow": "^10.0.0",
+    "ora": "^5.4.0",
+    "replace-in-file": "^6.2.0",
+    "update-notifier": "^5.1.0",
     "validate-npm-package-name": "^3.0.0"
   },
   "devDependencies": {
-    "ava": "^3.12.1",
-    "eslint": "^7.9.0",
-    "eslint-config-iamnapo": "^8.0.0",
-    "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-unicorn": "^22.0.0",
-    "husky": "^4.3.0",
-    "nock": "^13.0.4",
-    "nyc": "^15.1.0"
+    "ava": "^3.15.0",
+    "c8": "^7.7.2",
+    "eslint": "^7.27.0",
+    "eslint-config-iamnapo": "^15.0.0",
+    "eslint-plugin-import": "^2.23.3",
+    "eslint-plugin-unicorn": "^32.0.1",
+    "nock": "^13.0.11"
   },
   "engines": {
     "node": ">=12"

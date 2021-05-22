@@ -1,9 +1,9 @@
-const meow = require("meow");
-const updateNotifier = require("update-notifier");
+import meow from "meow";
+import updateNotifier from "update-notifier";
 
-const utils = require("./utils");
+import { validateName } from "./utils.js";
 
-module.exports = async () => {
+export default async () => {
 	const cli = meow(
 		`
 	Usage
@@ -24,6 +24,7 @@ module.exports = async () => {
 		$ gwi my-library -d 'do something, better'
 		`,
 		{
+			importMeta: import.meta,
 			flags: {
 				description: { alias: "d", default: "a js project", type: "string" },
 				ci: { default: true, type: "boolean" },
@@ -46,7 +47,7 @@ module.exports = async () => {
 			starterVersion: cli.pkg.version,
 		};
 	}
-	const validOrMsg = await utils.validateName(input);
+	const validOrMsg = await validateName(input);
 	if (typeof validOrMsg === "string") throw new TypeError(validOrMsg);
 
 	return {

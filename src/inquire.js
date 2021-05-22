@@ -1,15 +1,15 @@
-const inquirer = require("inquirer");
-const chalk = require("chalk");
+import inquirer from "inquirer";
+import chalk from "chalk";
 
-const utils = require("./utils");
+import { validateName } from "./utils.js";
 
-module.exports = async () => {
+export default async () => {
 	const packageNameQuestion = {
 		filter: (answer) => answer.trim(),
 		message: chalk.green("📦\u{200D} Enter the new package name:"),
 		name: "projectName",
 		type: "input",
-		validate: utils.validateName,
+		validate: validateName,
 	};
 
 	const packageDescriptionQuestion = {

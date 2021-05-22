@@ -1,25 +1,27 @@
 #!/usr/bin/env node
 
-const chalk = require("chalk");
+import chalk from "chalk";
 
-const checkArgs = require("./args");
-const inquire = require("./inquire");
-const tasks = require("./tasks");
-const gwi = require("./gwi");
-const utils = require("./utils");
+import checkArgs from "./args.js";
+import inquire from "./inquire.js";
+import gwi from "./gwi.js";
+import { getIntro } from "./utils.js";
+import { addInferredOptions, LiveTasks } from "./tasks.js";
 
 (async () => {
-	const argInfo = await checkArgs();
-	const userOptions = argInfo.projectName !== undefined ? argInfo : {
-		...argInfo,
-		...(await (() => {
-			console.log(utils.getIntro(process.stdout.columns));
-			return inquire();
-		})()),
-	};
-	const options = await tasks.addInferredOptions(userOptions);
-	return gwi(options, tasks.LiveTasks);
-})().catch((error) => {
-	console.error(`${chalk.red(error.message)}`);
-	process.exit(1);
-});
+	try {
+		const argInfo = await checkArgs();
+		const userOptions = argInfo.projectName ? argInfo : {
+			...argInfo,
+			...(await (() => {
+				console.log(getIntro(process.stdout.columns));
+				return inquire();
+			})()),
+		};
+		const options = await addInferredOptions(userOptions);
+		return gwi(options, LiveTasks);
+	} catch (error) {
+		console.error(`${chalk.red(error.message)}`);
+		return process.exit(1);
+	}
+})();

@@ -1,16 +1,16 @@
-const fs = require("fs");
+import fs from "node:fs";
 
-const gradient = require("gradient-string");
-const validateNpmPackageName = require("validate-npm-package-name");
-const chalk = require("chalk");
+import gradient from "gradient-string";
+import validateNpmPackageName from "validate-npm-package-name";
+import chalk from "chalk";
 
-function validateName(input) {
+export function validateName(input) {
 	if (!validateNpmPackageName(input).validForNewPackages) return "Name should be in-kebab-case.";
 	if (fs.existsSync(input)) return `The "${input}" path already exists in this directory.`;
 	return true;
 }
 
-function getIntro(columns) {
+export function getIntro(columns) {
 	const ascii = `
   ________ .__   __             __      __ .__   __   .__              .___   __
  /  _____/ |__|_/  |_          /  \\    /  \\|__|_/  |_ |  |__           |   |_/  |_
@@ -32,5 +32,3 @@ function getIntro(columns) {
 	if (columns && columns >= 74) return chalk.bold(gradient.mind(asciiSmaller));
 	return `\n${chalk.cyan.bold.underline("Git-With-It")}\n`;
 }
-
-module.exports = { validateName, getIntro };

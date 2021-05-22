@@ -1,32 +1,29 @@
-const fs = require("fs");
-const path = require("path");
+import fs from "node:fs";
+import path from "node:path";
 
-const chalk = require("chalk");
-const del = require("del");
-const ora = require("ora");
-const replace = require("replace-in-file");
-const execa = require("execa");
+import chalk from "chalk";
+import del from "del";
+import ora from "ora";
+import replace from "replace-in-file";
+import execa from "execa";
 
-const tasks = require("./tasks");
+import { PLACEHOLDERS } from "./tasks.js";
 
 const filterAllBut = (keep, from) => keep.reduce((acc, moduleName) => ({ ...acc, [moduleName]: from[moduleName] }), {});
 
-module.exports = async (
-	{
-		description,
-		email,
-		fullName,
-		githubUsername,
-		install,
-		projectName,
-		repoInfo,
-		runner,
-		ci,
-		workingDirectory,
-		eslint,
-	},
-	taskss,
-) => {
+export default async ({
+	description,
+	email,
+	fullName,
+	githubUsername,
+	install,
+	projectName,
+	repoInfo,
+	runner,
+	ci,
+	workingDirectory,
+	eslint,
+}, taskss) => {
 	let masterIsHere = false;
 	if (githubUsername === "iamnapo") {
 		console.log(chalk.redBright.dim("  🔱  Welcome back, master."));
@@ -40,7 +37,7 @@ module.exports = async (
 	const spinnerPackage = ora("Updating package.json").start();
 	const projectPath = path.join(workingDirectory, projectName);
 	const pkgPath = path.join(projectPath, "package.json");
-	const keptDevDeps = ["ava", "nyc", "husky"];
+	const keptDevDeps = ["ava", "c8"];
 	if (eslint) keptDevDeps.push("eslint", "eslint-config-iamnapo", "eslint-plugin-import", "eslint-plugin-unicorn");
 	const keptDeps = [];
 	const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
@@ -53,7 +50,7 @@ module.exports = async (
 		scripts: {
 			...(eslint ? { lint: "eslint . --cache" } : {}),
 			start: "node index.js",
-			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && nyc ava` : "nyc ava",
+			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && c8 ava` : "c8 ava",
 		},
 		husky: { hooks: { "pre-commit": `${runner} test` } },
 		repository: `github:${githubUsername}/${projectName}`,
@@ -108,8 +105,8 @@ module.exports = async (
 		const spinnerCI = ora("Updating CI .yml").start();
 		await replace({
 			files: path.join(projectPath, ".github", "workflows", "ci.yml"),
-			from: [/npm\n/g, /npm(?<! )/g, /(?<=( test\n))(.|\n)*/g],
-			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner, ""],
+			from: [/npm\n/g, /npm(?<! )/g],
+			to: [`${runner === "npm" ? "npm i" : "yarn"}\n`, runner],
 		});
 		spinnerCI.succeed();
 	}
@@ -120,11 +117,12 @@ module.exports = async (
 		`${path.join(projectPath, "tests")}/*`,
 		`${path.join(projectPath, "bin")}`,
 		`${path.join(projectPath, ".npmignore")}`,
+		`${path.join(projectPath, ".npmrc")}`,
 		`${path.join(projectPath, "usage.gif")}`,
 		`${path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
 	if (!ci) del([path.join(projectPath, ".github")]);
-	fs.writeFileSync(path.join(projectPath, "tests", "init.test.js"), "const test = require(\"ava\");\n\ntest.todo(\"main\");\n");
+	fs.writeFileSync(path.join(projectPath, "tests", "init.test.js"), "import test form \"ava\";\n\ntest.todo(\"main\");\n");
 	spinnerDelete.succeed();
 
 	if (install) {
@@ -133,14 +131,10 @@ module.exports = async (
 		installDeps.succeed();
 	}
 
-	const gitIsConfigured = Boolean(fullName !== tasks.PLACEHOLDERS.NAME && email !== tasks.PLACEHOLDERS.EMAIL);
+	const gitIsConfigured = Boolean(fullName !== PLACEHOLDERS.NAME && email !== PLACEHOLDERS.EMAIL);
 	if (gitIsConfigured) {
 		const spinnerGitInit = ora("Initializing git").start();
-		if (masterIsHere) {
-			await execa("git", ["init"], { cwd: projectPath, encoding: "utf8", stdio: "pipe" });
-		} else {
-			await taskss.initialCommit(commitHash, projectPath, fullName);
-		}
+		await (masterIsHere ? execa("git", ["init"], { cwd: projectPath, encoding: "utf8", stdio: "pipe" }) : taskss.initialCommit(commitHash, projectPath, fullName));
 		spinnerGitInit.succeed();
 	}
 
