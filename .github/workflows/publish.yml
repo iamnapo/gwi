@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: 🏗 Run replace-in-file
-      run: npx replace-in-file \"gwi\" \"@iamnapo\/gwi\" package.json
+        run: npx replace-in-file \"gwi\" \"@iamnapo\/gwi\" package.json
 
       - name: ⎔ Setup node
         uses: actions/setup-node@v2
