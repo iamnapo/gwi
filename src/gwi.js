@@ -37,7 +37,7 @@ export default async ({
 	const spinnerPackage = ora("Updating package.json").start();
 	const projectPath = path.join(workingDirectory, projectName);
 	const pkgPath = path.join(projectPath, "package.json");
-	const keptDevDeps = ["ava", "c8"];
+	const keptDevDeps = ["ava", "c8", "@iamnapo/prettier-config"];
 	if (eslint) keptDevDeps.push("eslint", "eslint-config-iamnapo", "eslint-plugin-import", "eslint-plugin-unicorn");
 	const keptDeps = [];
 	const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf8"));
