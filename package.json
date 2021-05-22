@@ -1,6 +1,6 @@
 {
   "name": "gwi",
-  "version": "3.2.0",
+  "version": "4.0.0",
   "description": "Interactive CLI for creating new JS repositories",
   "keywords": [
     "boilerplate",
