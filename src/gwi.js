@@ -52,7 +52,6 @@ export default async ({
 			start: "node index.js",
 			test: eslint ? `${runner === "npm" ? "npm run" : "yarn"} lint && c8 ava` : "c8 ava",
 		},
-		husky: { hooks: { "pre-commit": `${runner} test` } },
 		repository: `github:${githubUsername}/${projectName}`,
 		author: {
 			...pkg.author,
@@ -64,9 +63,10 @@ export default async ({
 		devDependencies: filterAllBut(keptDevDeps, pkg.devDependencies),
 		keywords: [],
 		files: ["src", "index.js"],
-		main: "index.js",
+		exports: "./index.js",
 	};
 	delete newPkg.bin;
+	if (!eslint) delete newPkg.eslintConfig;
 
 	fs.writeFileSync(pkgPath, `${JSON.stringify(newPkg, null, 2)}\n`);
 	await replace({
@@ -122,7 +122,7 @@ export default async ({
 		`${path.join(projectPath, ".github", "workflows", "publish.yml")}`,
 	]);
 	if (!ci) del([path.join(projectPath, ".github")]);
-	fs.writeFileSync(path.join(projectPath, "tests", "init.test.js"), "import test form \"ava\";\n\ntest.todo(\"main\");\n");
+	fs.writeFileSync(path.join(projectPath, "tests", "init.test.js"), "import test from \"ava\";\n\ntest.todo(\"main\");\n");
 	spinnerDelete.succeed();
 
 	if (install) {

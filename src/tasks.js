@@ -89,7 +89,7 @@ export const install = (spawner) => async (runner, projectDir) => {
 };
 
 export const getRepoInfo = (starterVersion) => (process.env.GWI_REPO_URL
-	? { branch: process.env.GWI_REPO_BRANCH ? process.env.GWI_REPO_BRANCH : "master", repo: process.env.GWI_REPO_URL }
+	? { branch: process.env.GWI_REPO_BRANCH || "master", repo: process.env.GWI_REPO_URL }
 	: { branch: `v${starterVersion}`, repo: "https://github.com/iamnapo/gwi.git" }
 );
 
